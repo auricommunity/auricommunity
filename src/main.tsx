@@ -6,7 +6,7 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename="/te-auricommunity">
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </StrictMode>,
