@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, X } from "lucide-react"
 import Navigation from "../components/Navigation"
 import Footer from "../components/Footer"
+import ImageWithFallback from "../components/ImageWithFallback"
 import { getAssetPath } from "../utils/path"
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slideProgress, setSlideProgress] = useState([0, 0, 0])
+  const [showPopup, setShowPopup] = useState(false)
+
+  // 팝업 표시 여부 확인
+  useEffect(() => {
+    const hideUntil = localStorage.getItem('hidePopupUntil')
+    if (hideUntil !== new Date().toDateString()) {
+      setShowPopup(true)
+    }
+  }, [])
 
   const slides = [
     {
@@ -113,6 +123,7 @@ export default function HomePage() {
                     muted
                     loop={slide.videoSettings?.loop !== false}
                     playsInline
+                    preload="metadata"
                     className="absolute inset-0 w-full h-full object-cover"
                     style={{ pointerEvents: 'none' }}
                   >
@@ -237,6 +248,51 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Camp Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="relative max-w-md w-full">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute -top-12 right-0 text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
+            >
+              <span>닫기</span>
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Poster */}
+            <Link to="/camp/31" onClick={() => setShowPopup(false)}>
+              <ImageWithFallback
+                src={getAssetPath("/images/31camp-poster.jpeg")}
+                alt="31 CAMP 포스터"
+                className="w-full h-auto rounded-lg shadow-2xl"
+              />
+            </Link>
+
+            {/* CTA Button */}
+            <Link
+              to="/camp/31"
+              onClick={() => setShowPopup(false)}
+              className="block w-full mt-4 py-4 bg-white text-black text-center font-light tracking-wider hover:bg-white/90 transition-colors"
+            >
+              자세히 보기
+            </Link>
+
+            {/* Don't show again today */}
+            <button
+              onClick={() => {
+                setShowPopup(false)
+                localStorage.setItem('hidePopupUntil', new Date().toDateString())
+              }}
+              className="block w-full mt-2 py-3 text-white/50 text-sm hover:text-white/80 transition-colors"
+            >
+              오늘 하루 보지 않기
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

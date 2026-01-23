@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Tent, Church, GraduationCap, Globe } from 'lucide-react'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import ImageWithFallback from '../components/ImageWithFallback'
@@ -10,8 +11,8 @@ export default function DonationPage() {
   const bankAccounts = [
     {
       bank: "카카오뱅크",
-      account: "7979-866-8405",
-      holder: "도예슬"
+      account: "7942-25-19879",
+      holder: "임세연"
     },
   ]
 
@@ -117,24 +118,32 @@ export default function DonationPage() {
             {[
               {
                 title: "다음세대를 위한 캠프",
-                desc: "여름/겨울 캠프를 통해 청소년들에게 복음을 전합니다."
+                desc: "여름/겨울 캠프를 통해 청소년들에게 복음을 전합니다.",
+                icon: Tent,
+                color: "text-blue-400"
               },
               {
                 title: "예배와 사역을 위한 지원",
-                desc: "미자립 교회, 청소년 예배 및 모임의 운영을 함께 돕습니다."
+                desc: "미자립 교회, 청소년 예배 및 모임의 운영을 함께 돕습니다.",
+                icon: Church,
+                color: "text-green-400"
               },
               {
                 title: "청소년 장학 후원",
-                desc: "캠프 참가가 어려운 청소년에게 참가비와 후원금을 지원합니다."
+                desc: "캠프 참가가 어려운 청소년에게 참가비와 후원금을 지원합니다.",
+                icon: GraduationCap,
+                color: "text-purple-400"
               },
               {
                 title: "국내 선교와 나눔 사역",
-                desc: "지역 청소년과 이웃을 위한 복음 전파와 봉사 활동에 사용됩니다."
+                desc: "지역 청소년과 이웃을 위한 복음 전파와 봉사 활동에 사용됩니다.",
+                icon: Globe,
+                color: "text-orange-400"
               }
             ].map((item, index) => (
               <div key={index} className="text-center">
                 <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">💝</span>
+                  <item.icon className={`w-7 h-7 ${item.color}`} />
                 </div>
                 <h4 className="text-lg font-light text-white mb-2">{item.title}</h4>
                 <p className="text-white/60 text-sm">{item.desc}</p>
