@@ -1,8 +1,9 @@
+import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Instagram, Youtube, Facebook } from 'lucide-react'
 import { getAssetPath } from '../utils/path'
 
-export default function Footer() {
+const Footer = memo(function Footer() {
   return (
     <footer className="py-16 bg-black border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -85,4 +86,6 @@ export default function Footer() {
       </div>
     </footer>
   )
-}
+})
+
+export default Footer

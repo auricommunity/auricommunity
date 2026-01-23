@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from 'react-router-dom'
-import { X } from 'lucide-react'
+import { X, Calendar, MapPin, Users, BookOpen, Sprout, Star } from 'lucide-react'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import ImageWithFallback from '../components/ImageWithFallback'
@@ -21,6 +21,20 @@ export default function CampPage() {
   const camps = [
     {
       id: 1,
+      title: "31 CAMP : RE:BUILDING",
+      subtitle: "무너진 것을 다시 세우는 시간",
+      period: "3월 1일(주일) ~ 2일(월)",
+      location: "일산하나교회",
+      participants: "청년 31명",
+      price: "사전 3만원 / 일반 3.5만원",
+      status: "모집중",
+      slug: "31",
+      description: "느헤미야의 심정으로 무너진 성벽을 다시 세우듯, 우리의 신앙과 삶을 RE:BUILDING 하는 1박 2일의 여정입니다.",
+      features: ["말씀 집회", "소그룹 나눔", "아침 큐티", "공동체 교제"],
+      image: getAssetPath("/images/31camp-poster.jpeg")
+    },
+    {
+      id: 2,
       title: "AURI 캠프",
       subtitle: "하나님의 사랑 안에서 하나 되는 다음세대",
       period: "매년 여름/겨울",
@@ -34,7 +48,7 @@ export default function CampPage() {
       image: getAssetPath("/images/auricamp main.jpg")
     },
     {
-      id: 2,
+      id: 3,
       title: "AND 캠프",
       subtitle: "And 함께하는 은혜의 시간",
       period: "과거 진행 (현재 중단)",
@@ -63,6 +77,7 @@ export default function CampPage() {
                 muted
                 loop
                 playsInline
+                preload="metadata"
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ pointerEvents: 'none' }}
               >
@@ -112,6 +127,7 @@ export default function CampPage() {
                   />
                   <div className="absolute top-4 right-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      camp.status === '모집중' ? 'bg-red-500/30 text-red-200 animate-pulse' :
                       camp.status === '정기캠프' ? 'bg-green-500/30 text-green-200' : 'bg-yellow-500/30 text-yellow-200'
                     }`}>
                       {camp.status}
@@ -125,13 +141,16 @@ export default function CampPage() {
 
                   <div className="space-y-2 text-sm text-white/70 mb-6">
                     <div className="flex items-center space-x-2">
-                      <span>📅 {camp.period}</span>
+                      <Calendar className="w-4 h-4 text-blue-400" />
+                      <span>{camp.period}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span>📍 {camp.location}</span>
+                      <MapPin className="w-4 h-4 text-green-400" />
+                      <span>{camp.location}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span>👥 {camp.participants}</span>
+                      <Users className="w-4 h-4 text-purple-400" />
+                      <span>{camp.participants}</span>
                     </div>
                   </div>
 
@@ -169,14 +188,14 @@ export default function CampPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { title: "말씀 배움", desc: "성경을 통해 하나님의 마음을 알아가요" },
-              { title: "진정한 친구", desc: "믿음 안에서 평생 친구를 만나요" },
-              { title: "영적 성장", desc: "하나님의 사랑 안에서 성장해요" },
-              { title: "소중한 추억", desc: "평생 기억에 남을 추억을 만들어요" }
+              { title: "말씀 배움", desc: "성경을 통해 하나님의 마음을 알아가요", icon: BookOpen, color: "text-blue-400" },
+              { title: "진정한 친구", desc: "믿음 안에서 평생 친구를 만나요", icon: Users, color: "text-green-400" },
+              { title: "영적 성장", desc: "하나님의 사랑 안에서 성장해요", icon: Sprout, color: "text-purple-400" },
+              { title: "소중한 추억", desc: "평생 기억에 남을 추억을 만들어요", icon: Star, color: "text-orange-400" }
             ].map((item, index) => (
               <div key={index} className="text-center">
                 <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">✨</span>
+                  <item.icon className={`w-7 h-7 ${item.color}`} />
                 </div>
                 <h4 className="text-lg font-light text-white mb-2">{item.title}</h4>
                 <p className="text-white/60 text-sm">{item.desc}</p>
@@ -212,23 +231,23 @@ export default function CampPage() {
 
       {/* Application Modal */}
       {showApplicationModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-lg max-w-md w-full p-6 border border-gray-700">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-zinc-900 max-w-md w-full p-8 border border-white/10">
             <div className="text-center space-y-6">
-              <h3 className="text-xl font-bold text-white">캠프 신청</h3>
+              <h3 className="text-xl font-light tracking-wide text-white">캠프 신청</h3>
 
               {!isApplicationPeriod && (
-                <div className="space-y-4">
-                  <div className="bg-orange-900/30 border border-orange-600 rounded-lg p-4">
-                    <p className="text-gray-300 text-sm">
-                      지금은 신청기간이 아닙니다.
-                      <br />다음 신청 기간을 기다려주세요.
+                <div className="space-y-6">
+                  <div className="py-4 border-y border-white/10">
+                    <p className="text-white/60 text-sm font-light">
+                      지금은 신청기간이 아닙니다.<br />
+                      다음 신청 기간을 기다려주세요.
                     </p>
                   </div>
 
                   <button
                     onClick={() => setShowApplicationModal(false)}
-                    className="w-full px-6 py-3 border border-gray-600 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+                    className="w-full py-4 border border-white/20 text-white font-light tracking-wider hover:bg-white/5 transition-colors"
                   >
                     확인
                   </button>
@@ -241,14 +260,14 @@ export default function CampPage() {
 
       {/* Inquiry Modal */}
       {showInquiryModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-lg max-w-md w-full p-6 border border-gray-700">
-            <div className="text-center space-y-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-white">캠프 문의</h3>
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-zinc-900 max-w-md w-full p-8 border border-white/10">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-light tracking-wide text-white">캠프 문의</h3>
                 <button
                   onClick={() => setShowInquiryModal(false)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-white/40 hover:text-white transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -258,24 +277,24 @@ export default function CampPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <a
                     href="tel:010-4820-9155"
-                    className="flex items-center justify-center space-x-2 px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                    className="flex items-center justify-center py-4 bg-white text-black font-light tracking-wider hover:bg-white/90 transition-colors"
                   >
-                    <span className="text-sm">전화문의</span>
+                    전화문의
                   </a>
                   <a
                     href="mailto:auricommunity@gmail.com"
-                    className="flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    className="flex items-center justify-center py-4 border border-white/20 text-white font-light tracking-wider hover:bg-white/5 transition-colors"
                   >
-                    <span className="text-sm">이메일</span>
+                    이메일
                   </a>
                 </div>
 
-                <div className="bg-gray-800 rounded-lg p-4 text-left">
-                  <h4 className="text-white font-medium mb-2 text-sm">📞 전화 문의 시간</h4>
-                  <div className="space-y-1 text-gray-300 text-xs">
-                    <p>평일: 오전 10시 ~ 오후 6시</p>
-                    <p>주말: 오후 2시 ~ 오후 5시</p>
-                    <p className="text-orange-400 mt-1">* 공휴일 휴무</p>
+                <div className="py-4 border-y border-white/10 text-left">
+                  <h4 className="text-white/80 font-light mb-3 text-sm tracking-wide">전화 문의 시간</h4>
+                  <div className="space-y-1 text-white/50 text-xs font-light">
+                    <p>평일 — 오전 10시 ~ 오후 6시</p>
+                    <p>주말 — 오후 2시 ~ 오후 5시</p>
+                    <p className="text-white/30 mt-2">* 공휴일 휴무</p>
                   </div>
                 </div>
               </div>

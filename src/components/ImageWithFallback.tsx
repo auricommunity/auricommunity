@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, memo } from 'react'
 
 interface ImageWithFallbackProps {
   src: string
@@ -7,7 +7,7 @@ interface ImageWithFallbackProps {
   fallbackText?: string
 }
 
-export default function ImageWithFallback({
+const ImageWithFallback = memo(function ImageWithFallback({
   src,
   alt,
   className = "",
@@ -28,17 +28,21 @@ export default function ImageWithFallback({
   }
 
   return (
-    <>
+    <div className={`${className} relative`}>
       {!imageLoaded && (
-        <div className={`${className} bg-zinc-800 animate-pulse`}></div>
+        <div className="absolute inset-0 bg-zinc-800 animate-pulse"></div>
       )}
       <img
         src={src}
         alt={alt}
-        className={`${className} ${!imageLoaded ? 'hidden' : ''}`}
+        loading="lazy"
+        decoding="async"
+        className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         onError={() => setImageError(true)}
         onLoad={() => setImageLoaded(true)}
       />
-    </>
+    </div>
   )
-}
+})
+
+export default ImageWithFallback

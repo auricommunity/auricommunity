@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Heart, Users, Sprout, HeartHandshake } from 'lucide-react'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import ImageWithFallback from '../components/ImageWithFallback'
@@ -328,15 +329,15 @@ export default function AboutPage() {
           </SlideUpAnimation>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { title: "사랑", desc: "하나님의 무조건적인 사랑을 경험하고, 다음세대와 공동체를 향해 그 사랑을 전합니다.", icon: "❤️" },
-              { title: "교제", desc: "믿음 안에서 한 가족이 되어 서로를 돌보고, 함께 걸어가는 연합 공동체입니다.", icon: "🤝" },
-              { title: "성장", desc: "말씀, 예배, 기도 가운데 다음세대가 신앙 안에서 자라며 성숙한 제자가 됩니다.", icon: "🌱" },
-              { title: "섬김", desc: "예수님의 마음으로 지역과 다음세대를 섬기며, 세상에 소망을 전합니다.", icon: "🙏" }
+              { title: "사랑", desc: "하나님의 무조건적인 사랑을 경험하고, 다음세대와 공동체를 향해 그 사랑을 전합니다.", icon: Heart, color: "text-blue-400" },
+              { title: "교제", desc: "믿음 안에서 한 가족이 되어 서로를 돌보고, 함께 걸어가는 연합 공동체입니다.", icon: Users, color: "text-green-400" },
+              { title: "성장", desc: "말씀, 예배, 기도 가운데 다음세대가 신앙 안에서 자라며 성숙한 제자가 됩니다.", icon: Sprout, color: "text-purple-400" },
+              { title: "섬김", desc: "예수님의 마음으로 지역과 다음세대를 섬기며, 세상에 소망을 전합니다.", icon: HeartHandshake, color: "text-orange-400" }
             ].map((value, index) => (
               <FadeInAnimation key={index} delay={index * 200}>
                 <div className="text-center group hover:scale-105 transition-transform duration-300">
                   <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/20 transition-colors duration-300">
-                    <span className="text-2xl">{value.icon}</span>
+                    <value.icon className={`w-7 h-7 ${value.color}`} />
                   </div>
                   <h4 className="text-lg font-light text-white mb-2">{value.title}</h4>
                   <p className="text-white/60 text-sm">{value.desc}</p>
