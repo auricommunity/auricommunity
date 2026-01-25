@@ -6,13 +6,29 @@ import Footer from '../components/Footer'
 import ImageWithFallback from '../components/ImageWithFallback'
 import { getAssetPath } from '../utils/path'
 
+// 캠프 날짜 설정 (2026년 3월 1일)
+const campDate = new Date('2026-03-01T18:00:00')
+
+// 타이머 계산 함수
+function calculateTimeLeft() {
+  const now = new Date()
+  const difference = campDate.getTime() - now.getTime()
+
+  if (difference > 0) {
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60)
+    }
+  }
+  return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+}
+
 export default function Camp31DetailPage() {
   const [showApplicationModal, setShowApplicationModal] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
-  // 캠프 날짜 설정 (2026년 3월 1일)
-  const campDate = new Date('2026-03-01T18:00:00')
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft)
 
   // 모집 상태
   const isApplicationPeriod = true
@@ -21,17 +37,7 @@ export default function Camp31DetailPage() {
   // 카운트다운 타이머
   useEffect(() => {
     const timer = setInterval(() => {
-      const now = new Date()
-      const difference = campDate.getTime() - now.getTime()
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
-        })
-      }
+      setTimeLeft(calculateTimeLeft())
     }, 1000)
 
     return () => clearInterval(timer)
