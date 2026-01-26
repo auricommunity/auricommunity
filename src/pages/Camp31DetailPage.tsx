@@ -32,7 +32,7 @@ export default function Camp31DetailPage() {
 
   // 모집 상태
   const isApplicationPeriod = true
-  const applicationFormUrl = "https://forms.gle/YOUR_FORM_ID"
+  const applicationFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeB900CUIbpo9sjGRnBa2BDBp_QWuRDy-6lju6bm8_Z399f0Q/viewform?usp=dialog"
 
   // 카운트다운 타이머
   useEffect(() => {
