@@ -274,12 +274,13 @@ export default function Camp31DetailPage() {
 
             <div className="aspect-video bg-zinc-900 rounded overflow-hidden">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3158.1234567890123!2d126.7700000!3d37.6600000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDM5JzM2LjAiTiAxMjbCsDQ2JzEyLjAiRQ!5e0!3m2!1sko!2skr!4v1609459200000!5m2!1sko!2skr"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3158.148282850283!2d126.78888737607612!3d37.66922337201218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9000bbd30cdd%3A0x7a21659847d35a7f!2z7J287IKw7ZWY64KY6rWQ7ZqM!5e0!3m2!1sko!2skr!4v1769490816671!5m2!1sko!2skr"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
                 title="일산하나교회 위치"
               ></iframe>
             </div>
