@@ -215,41 +215,11 @@ export default function Camp31DetailPage() {
           </div>
 
           <div className="relative">
-            {/* Blur Overlay */}
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-              <div className="text-center">
-                <p className="text-white/80 text-lg font-light tracking-wide">추후 공개됩니다</p>
-              </div>
-            </div>
-
-            <div className="space-y-0 blur-sm select-none">
-              {/* Day 1 */}
-              <div className="border-l border-white/20 pl-8 pb-16 relative">
-                <div className="absolute left-0 top-0 w-2 h-2 bg-white rounded-full -translate-x-[5px]"></div>
-                <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4">Day 1 — 3월 1일 (주일)</div>
-                <div className="space-y-3 text-white/70 font-light">
-                  <p>18:00 — 등록 및 체크인</p>
-                  <p>19:00 — 저녁식사</p>
-                  <p>20:00 — 오프닝 & 아이스브레이킹</p>
-                  <p>21:00 — 저녁 집회</p>
-                  <p>23:00 — 소그룹 나눔</p>
-                </div>
-              </div>
-
-              {/* Day 2 */}
-              <div className="border-l border-white/20 pl-8 relative">
-                <div className="absolute left-0 top-0 w-2 h-2 bg-white rounded-full -translate-x-[5px]"></div>
-                <div className="text-xs tracking-[0.2em] text-white/40 uppercase mb-4">Day 2 — 3월 2일 (월)</div>
-                <div className="space-y-3 text-white/70 font-light">
-                  <p>07:00 — 아침 큐티</p>
-                  <p>08:00 — 아침식사</p>
-                  <p>09:30 — 오전 집회</p>
-                  <p>12:00 — 점심식사</p>
-                  <p>13:30 — 클로징 & 파송</p>
-                  <p>14:30 — 해산</p>
-                </div>
-              </div>
-            </div>
+            <ImageWithFallback
+              src={getAssetPath("/images/31camp-schedule.png")}
+              alt="31 CAMP 스케줄"
+              className="w-full h-auto"
+            />
           </div>
         </div>
       </section>
