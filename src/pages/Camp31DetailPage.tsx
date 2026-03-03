@@ -30,8 +30,8 @@ export default function Camp31DetailPage() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft)
 
-  // 모집 상태
-  const isApplicationPeriod = true
+  // 모집 상태 (캠프 종료 - 다음 캠프 시 true로 변경하고 applicationFormUrl 업데이트)
+  const isApplicationPeriod = false
   const applicationFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeB900CUIbpo9sjGRnBa2BDBp_QWuRDy-6lju6bm8_Z399f0Q/viewform?usp=dialog"
 
   // 카운트다운 타이머
@@ -348,9 +348,13 @@ export default function Camp31DetailPage() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="py-4 border-y border-white/10">
-                    <p className="text-white/60 text-sm">
-                      현재 신청 기간이 아닙니다.
+                  <div className="py-6 border-y border-white/10">
+                    <p className="text-white/80 text-lg font-light mb-2">
+                      이번 캠프는 종료되었습니다
+                    </p>
+                    <p className="text-white/50 text-sm font-light">
+                      함께해 주셔서 감사합니다!<br />
+                      다음 캠프에서 다시 만나요
                     </p>
                   </div>
                   <button

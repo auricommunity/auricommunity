@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { ArrowRight, X } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+// import { X } from "lucide-react" // 초기 접속 팝업용 (주석 해제하여 활용)
 import Navigation from "../components/Navigation"
 import Footer from "../components/Footer"
-import ImageWithFallback from "../components/ImageWithFallback"
+// import ImageWithFallback from "../components/ImageWithFallback" // 초기 접속 팝업용 (주석 해제하여 활용)
 import { getAssetPath } from "../utils/path"
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slideProgress, setSlideProgress] = useState([0, 0, 0])
-  const [showPopup, setShowPopup] = useState(false)
-
-  // 팝업 표시 여부 확인
-  useEffect(() => {
-    const hideUntil = localStorage.getItem('hidePopupUntil')
-    if (hideUntil !== new Date().toDateString()) {
-      setShowPopup(true)
-    }
-  }, [])
+  // ===== 초기 접속 팝업 (주석 해제하여 활용) =====
+  // const [showPopup, setShowPopup] = useState(false)
+  //
+  // useEffect(() => {
+  //   const hideUntil = localStorage.getItem('hidePopupUntil')
+  //   if (hideUntil !== new Date().toDateString()) {
+  //     setShowPopup(true)
+  //   }
+  // }, [])
+  // ===== 초기 접속 팝업 상태 끝 =====
 
   const slides = [
     {
@@ -249,11 +251,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Camp Popup */}
+      {/* ===== 초기 접속 팝업 (주석 해제하여 활용) =====
+         사용법: 위쪽 showPopup 상태와 useEffect도 함께 주석 해제 필요
+         포스터 이미지, 링크 경로, 버튼 텍스트를 수정하여 다른 캠프에도 활용 가능
+
       {showPopup && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="relative max-w-md w-full">
-            {/* Close Button */}
             <button
               onClick={() => setShowPopup(false)}
               className="absolute -top-12 right-0 text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
@@ -262,7 +266,6 @@ export default function HomePage() {
               <X className="w-5 h-5" />
             </button>
 
-            {/* Poster */}
             <Link to="/camp/31" onClick={() => setShowPopup(false)}>
               <ImageWithFallback
                 src={getAssetPath("/images/31camp-poster.jpeg")}
@@ -271,7 +274,6 @@ export default function HomePage() {
               />
             </Link>
 
-            {/* CTA Button */}
             <Link
               to="/camp/31"
               onClick={() => setShowPopup(false)}
@@ -280,7 +282,6 @@ export default function HomePage() {
               자세히 보기
             </Link>
 
-            {/* Don't show again today */}
             <button
               onClick={() => {
                 setShowPopup(false)
@@ -293,6 +294,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
+      ===== 초기 접속 팝업 끝 ===== */}
 
       <Footer />
     </div>
