@@ -61,6 +61,20 @@ export default function CampPage() {
       features: ["말씀 나눔", "공동체 교제", "자연 체험", "문화 활동"],
       image: getAssetPath("/images/andcamp main.jpg")
     },
+    // {
+    //   id: 4,
+    //   title: "하나다캠프",
+    //   subtitle: "따뜻한 만남, 하나 되는 우리",
+    //   period: "미정",
+    //   location: "미정",
+    //   participants: "미정",
+    //   price: "미정",
+    //   status: "준비중",
+    //   slug: "hanada",
+    //   description: "하나다캠프는 따뜻한 교제와 깊은 나눔을 통해 하나님 안에서 하나 되는 특별한 캠프입니다.",
+    //   features: ["말씀 집회", "공동체 교제", "찬양 워십", "소그룹 나눔"],
+    //   image: ""
+    // },
   ]
 
   return (
@@ -112,65 +126,61 @@ export default function CampPage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 mb-20">
+          <div className="space-y-6 mb-20">
             {camps.map((camp) => (
               <Link
                 key={camp.id}
                 to={`/camp/${camp.slug}`}
-                className="bg-zinc-900 rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 block"
+                className="group grid md:grid-cols-[280px_1fr] gap-0 border border-white/10 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 block"
               >
-                <div className="relative">
+                {/* 이미지 */}
+                <div className="relative overflow-hidden">
                   <ImageWithFallback
                     src={camp.image}
                     alt={camp.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-52 md:h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      camp.status === '모집중' ? 'bg-red-500/30 text-red-200 animate-pulse' :
-                      camp.status === '정기캠프' ? 'bg-green-500/30 text-green-200' : 'bg-yellow-500/30 text-yellow-200'
+                  <div className="absolute top-4 left-4">
+                    <span className={`px-2.5 py-1 text-[10px] tracking-wider font-medium uppercase ${
+                      camp.status === '모집중' ? 'bg-white text-black' :
+                      camp.status === '정기캠프' ? 'bg-white/20 text-white' : 'bg-white/10 text-white/60'
                     }`}>
                       {camp.status}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <h3 className="text-xl font-light text-white mb-2">{camp.title}</h3>
-                  <p className="text-white/60 text-sm mb-4">{camp.subtitle}</p>
+                {/* 정보 */}
+                <div className="p-8 md:p-10 flex flex-col justify-center">
+                  <div className="flex items-baseline gap-4 mb-3">
+                    <h3 className="text-xl md:text-2xl font-extralight text-white tracking-tight">{camp.title}</h3>
+                  </div>
+                  <p className="text-white/40 text-sm font-light mb-6">{camp.subtitle}</p>
 
-                  <div className="space-y-2 text-sm text-white/70 mb-6">
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-blue-400" />
-                      <span>{camp.period}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="w-4 h-4 text-green-400" />
-                      <span>{camp.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Users className="w-4 h-4 text-purple-400" />
-                      <span>{camp.participants}</span>
-                    </div>
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-white/50 font-light mb-6">
+                    <span className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-white/25" />
+                      {camp.period}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5 text-white/25" />
+                      {camp.location}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Users className="w-3.5 h-3.5 text-white/25" />
+                      {camp.participants}
+                    </span>
                   </div>
 
-                  <p className="text-white/60 text-sm mb-4 leading-relaxed">
+                  <p className="text-white/30 text-sm font-light leading-relaxed mb-6 line-clamp-2">
                     {camp.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {camp.features.map((feature, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-
                   <div className="flex items-center justify-between">
-                    <span className="text-white font-light">{camp.price}</span>
+                    <span className="text-white/60 text-sm font-light">{camp.price}</span>
+                    <span className="text-[11px] tracking-[0.15em] text-white/20 uppercase group-hover:text-white/50 transition-colors">
+                      자세히 보기 →
+                    </span>
                   </div>
                 </div>
               </Link>
