@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { navItems } from '../lib/site-data'
 import { getAssetPath } from '../utils/path'
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
 
-  const isActive = (path: string) => location.pathname === path
+  const isActive = (path: string, match: 'exact' | 'prefix' = 'exact') =>
+    match === 'prefix'
+      ? location.pathname === path || location.pathname.startsWith(`${path}/`)
+      : location.pathname === path
 
   return (
     <nav className="fixed top-0 w-full bg-transparent backdrop-blur-sm z-50">
@@ -25,44 +29,26 @@ export default function Navigation() {
             </span>
           </Link>
           <div className="hidden md:flex items-center space-x-12">
-            <Link
-              to="/about"
-              className={`${
-                isActive('/about') ? 'text-white' : 'text-white/70'
-              } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-            >
-              ABOUT
-            </Link>
-            <Link
-              to="/connect-worship"
-              className={`${
-                isActive('/connect-worship') ? 'text-white' : 'text-white/70'
-              } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-            >
-              CONNECT WORSHIP
-            </Link>
-            <Link
-              to="/camp"
-              className={`${
-                isActive('/camp') ? 'text-white' : 'text-white/70'
-              } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-            >
-              CAMP
-            </Link>
-            <Link
-              to="/donation"
-              className={`${
-                isActive('/donation') ? 'text-white' : 'text-white/70'
-              } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-            >
-              후원
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`${
+                  isActive(item.path, item.match) ? 'text-white' : 'text-white/70'
+                } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
           {/* 모바일 메뉴 버튼 */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 text-white hover:text-white/80 transition-colors"
+            aria-label={mobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? (
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,44 +64,20 @@ export default function Navigation() {
 
         {/* 모바일 메뉴 */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/10">
+          <div id="mobile-navigation" className="md:hidden mt-4 pb-4 border-t border-white/10">
             <div className="flex flex-col space-y-4 pt-4">
-              <Link
-                to="/about"
-                className={`${
-                  isActive('/about') ? 'text-white' : 'text-white/70'
-                } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                ABOUT
-              </Link>
-              <Link
-                to="/connect-worship"
-                className={`${
-                  isActive('/connect-worship') ? 'text-white' : 'text-white/70'
-                } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                CONNECT WORSHIP
-              </Link>
-              <Link
-                to="/camp"
-                className={`${
-                  isActive('/camp') ? 'text-white' : 'text-white/70'
-                } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                CAMP
-              </Link>
-              <Link
-                to="/donation"
-                className={`${
-                  isActive('/donation') ? 'text-white' : 'text-white/70'
-                } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                후원
-              </Link>
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`${
+                    isActive(item.path, item.match) ? 'text-white' : 'text-white/70'
+                  } hover:text-white transition-all duration-300 text-sm font-light tracking-wide`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
         )}

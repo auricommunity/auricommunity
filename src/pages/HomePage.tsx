@@ -5,11 +5,11 @@ import { ArrowRight } from "lucide-react"
 import Navigation from "../components/Navigation"
 import Footer from "../components/Footer"
 // import ImageWithFallback from "../components/ImageWithFallback" // 초기 접속 팝업용 (주석 해제하여 활용)
-import { getAssetPath } from "../utils/path"
+import { homeSlides } from "../lib/site-data"
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [slideProgress, setSlideProgress] = useState([0, 0, 0])
+  const [slideProgress, setSlideProgress] = useState(() => homeSlides.map(() => 0))
   // ===== 초기 접속 팝업 (주석 해제하여 활용) =====
   // const [showPopup, setShowPopup] = useState(false)
   //
@@ -21,65 +21,17 @@ export default function HomePage() {
   // }, [])
   // ===== 초기 접속 팝업 상태 끝 =====
 
-  const slides = [
-    {
-      id: 0,
-      title: "ABOUT US",
-      number: "01",
-      mediaType: "video",
-      video: getAssetPath("/videos/aboutus.mp4"),
-      mainTitle: "AURI",
-      subtitle: "하나님의 사랑 안에서",
-      description: "믿음과 함께하는 특별한 공동체 경험을 만나보세요",
-      videoSettings: {
-        loop: false,
-        playOnce: false
-      },
-      duration: 2000
-    },
-    {
-      id: 1,
-      title: "CAMP",
-      number: "02",
-      mediaType: "video",
-      video: getAssetPath("/videos/camp.mp4"),
-      mainTitle: "CAMP",
-      subtitle: "하나님과 함께하는 캠프",
-      description: "하나님과 더 깊이 만나는 특별한 시간들",
-      videoSettings: {
-        loop: true,
-        playOnce: false
-      },
-      duration: 5000
-    },
-    {
-      id: 2,
-      title: "Connect Worship",
-      number: "03",
-      mediaType: "video",
-      video: getAssetPath("/videos/worship.mp4"),
-      mainTitle: "Connect Worship",
-      subtitle: "워십으로 하나님을 섬기는 팀",
-      description: "워십과 함께 하나님께 경배를 올려드리는 시간",
-      videoSettings: {
-        loop: true,
-        playOnce: false
-      },
-      duration: 3400
-    }
-  ]
-
   useEffect(() => {
     const timer = setInterval(() => {
       setSlideProgress(prev => {
         const newProgress = [...prev]
-        const currentSlideDuration = slides[currentSlide]?.duration || 5000
+        const currentSlideDuration = homeSlides[currentSlide]?.duration || 5000
         newProgress[currentSlide] += (100 / (currentSlideDuration / 100))
 
         if (newProgress[currentSlide] >= 100) {
           newProgress[currentSlide] = 100
           setTimeout(() => {
-            const nextSlide = (currentSlide + 1) % slides.length
+            const nextSlide = (currentSlide + 1) % homeSlides.length
             setCurrentSlide(nextSlide)
             const resetProgress = [...newProgress]
             resetProgress[nextSlide] = 0
@@ -92,7 +44,7 @@ export default function HomePage() {
     }, 100)
 
     return () => clearInterval(timer)
-  }, [currentSlide, slides])
+  }, [currentSlide])
 
   const handleSlideChange = (index: number) => {
     setCurrentSlide(index)
@@ -111,7 +63,7 @@ export default function HomePage() {
       <section className="min-h-screen flex items-center justify-center relative">
         {/* Background Media */}
         <div className="absolute inset-0 z-0">
-          {slides.map((slide, index) => (
+          {homeSlides.map((slide, index) => (
             <div
               key={slide.id}
               className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -146,18 +98,18 @@ export default function HomePage() {
         {/* Content */}
         <div className="relative z-10 text-center px-6">
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-thin tracking-wider mb-4 transition-all duration-1000">
-            {slides[currentSlide].mainTitle}
+            {homeSlides[currentSlide].mainTitle}
           </h1>
           <p className="text-lg md:text-xl font-light tracking-wide text-white/80 mb-4 transition-all duration-1000">
-            {slides[currentSlide].subtitle}
+            {homeSlides[currentSlide].subtitle}
           </p>
           <p className="text-sm md:text-base font-light text-white/60 mb-16 max-w-2xl mx-auto transition-all duration-1000">
-            {slides[currentSlide].description}
+            {homeSlides[currentSlide].description}
           </p>
 
           {/* Navigation Pills */}
           <div className="flex justify-center space-x-0 mb-8">
-            {slides.map((slide, index) => (
+            {homeSlides.map((slide, index) => (
               <div key={slide.id} className="relative">
                 <button
                   onClick={() => handleSlideChange(index)}
