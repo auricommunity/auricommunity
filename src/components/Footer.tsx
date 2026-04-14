@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Instagram, Youtube, Facebook } from 'lucide-react'
+import { navItems } from '../lib/site-data'
 import { getAssetPath } from '../utils/path'
 
 const Footer = memo(function Footer() {
@@ -28,18 +29,15 @@ const Footer = memo(function Footer() {
           <div>
             <h4 className="font-light text-white mb-6 text-sm tracking-wide">MENU</h4>
             <div className="space-y-3">
-              <Link to="/about" className="block text-white/60 hover:text-white transition-colors duration-300 text-sm font-light">
-                ABOUT
-              </Link>
-              <Link to="/connect-worship" className="block text-white/60 hover:text-white transition-colors duration-300 text-sm font-light">
-                CONNECT WORSHIP
-              </Link>
-              <Link to="/camp" className="block text-white/60 hover:text-white transition-colors duration-300 text-sm font-light">
-                CAMP
-              </Link>
-              <Link to="/donation" className="block text-white/60 hover:text-white transition-colors duration-300 text-sm font-light">
-                후원
-              </Link>
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="block text-white/60 hover:text-white transition-colors duration-300 text-sm font-light"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
           <div>

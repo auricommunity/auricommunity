@@ -4,6 +4,7 @@ import { X, Calendar, MapPin, Users, BookOpen, Sprout, Star } from 'lucide-react
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import ImageWithFallback from '../components/ImageWithFallback'
+import { camps } from '../lib/site-data'
 import { getAssetPath } from '../utils/path'
 
 export default function CampPage() {
@@ -17,65 +18,6 @@ export default function CampPage() {
     video: getAssetPath("/videos/campmain.mp4"),
     alt: "캠프 히어로 영상"
   }
-
-  const camps = [
-    {
-      id: 1,
-      title: "31 CAMP : RE:BUILDING",
-      subtitle: "무너진 것을 다시 세우는 시간",
-      period: "3월 1일(주일) ~ 2일(월)",
-      location: "일산하나교회",
-      participants: "청년 31명",
-      price: "사전 3만원 / 일반 3.5만원",
-      status: "모집중",
-      slug: "31",
-      description: "느헤미야의 심정으로 무너진 성벽을 다시 세우듯, 우리의 신앙과 삶을 RE:BUILDING 하는 1박 2일의 여정입니다.",
-      features: ["말씀 집회", "소그룹 나눔", "아침 큐티", "공동체 교제"],
-      image: getAssetPath("/images/31camp-poster.jpeg")
-    },
-    {
-      id: 2,
-      title: "AURI 캠프",
-      subtitle: "하나님의 사랑 안에서 하나 되는 다음세대",
-      period: "매년 여름/겨울",
-      location: "미정",
-      participants: "중학생~고등학생",
-      price: "문의",
-      status: "정기캠프",
-      slug: "auri",
-      description: "AURI 공동체의 대표 정기 캠프로, 다음세대를 위한 특별한 영적 성장의 시간입니다.",
-      features: ["말씀 집회", "찬양 워십", "공동체 활동", "개인 기도 시간"],
-      image: getAssetPath("/images/auricamp main.jpg")
-    },
-    {
-      id: 3,
-      title: "AND 캠프",
-      subtitle: "And 함께하는 은혜의 시간",
-      period: "과거 진행 (현재 중단)",
-      location: "가평 힐링캠프",
-      participants: "중학생~고등학생",
-      price: "-",
-      status: "지난캠프",
-      slug: "and",
-      description: "2024년, AURI는 10년의 걸음을 돌아보며, 단 한 번의 특별한 캠프, AND를 열었습니다.",
-      features: ["말씀 나눔", "공동체 교제", "자연 체험", "문화 활동"],
-      image: getAssetPath("/images/andcamp main.jpg")
-    },
-    // {
-    //   id: 4,
-    //   title: "하나다캠프",
-    //   subtitle: "따뜻한 만남, 하나 되는 우리",
-    //   period: "미정",
-    //   location: "미정",
-    //   participants: "미정",
-    //   price: "미정",
-    //   status: "준비중",
-    //   slug: "hanada",
-    //   description: "하나다캠프는 따뜻한 교제와 깊은 나눔을 통해 하나님 안에서 하나 되는 특별한 캠프입니다.",
-    //   features: ["말씀 집회", "공동체 교제", "찬양 워십", "소그룹 나눔"],
-    //   image: ""
-    // },
-  ]
 
   return (
     <div className="min-h-screen bg-black text-white">
