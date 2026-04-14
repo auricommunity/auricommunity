@@ -169,7 +169,7 @@ export default function HomePage() {
               <div className="aspect-video w-full">
                 <iframe
                   className="w-full h-full rounded-lg"
-                  src="https://www.youtube.com/embed/R_JVajAYtxs?si=won_1ylcluGnkF0C"
+                  src="https://www.youtube.com/embed/ZAGecliHJ7Q?si=T-DJKuoCEGq5nJX9"
                   title="AURI COMMUNITY 소개 비디오"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
