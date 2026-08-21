@@ -1,371 +1,305 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Calendar, MapPin, Users, Clock, ChevronDown } from 'lucide-react'
-import Navigation from '../components/Navigation'
+import { ArrowLeft, ArrowRight, MapPin } from 'lucide-react'
+import CampDetailNavigation from '../components/CampDetailNavigation'
 import Footer from '../components/Footer'
 import ImageWithFallback from '../components/ImageWithFallback'
+import { CAMP31_YOUTUBE_URL } from '../config/camp31'
 import { getAssetPath } from '../utils/path'
+import './Camp31DetailPage.css'
 
-// 캠프 날짜 설정 (2026년 3월 1일)
-const campDate = new Date('2026-03-01T18:00:00')
+const CAMP31_BACKGROUND_VIDEO = getAssetPath('/videos/31camp-background.mp4')
 
-// 타이머 계산 함수
-function calculateTimeLeft() {
-  const now = new Date()
-  const difference = campDate.getTime() - now.getTime()
+const campFacts = [
+  { number: '01', label: 'DATE', value: '3월 1일(주일) 저녁 — 2일(월) 오후' },
+  { number: '02', label: 'PLACE', value: '일산하나교회' },
+  { number: '03', label: 'PEOPLE', value: '청년 31명 · 선착순' },
+  { number: '04', label: 'FEE', value: '사전 30,000원 · 일반 35,000원' },
+]
 
-  if (difference > 0) {
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60)
-    }
-  }
-  return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-}
+const faqs = [
+  {
+    question: '참가 대상이 어떻게 되나요?',
+    answer: '청년(대학생, 직장인)을 대상으로 하며, 31명 선착순으로 마감됩니다.',
+  },
+  {
+    question: '참가비에는 무엇이 포함되나요?',
+    answer: '1박 숙박, 3식 식사, 모든 프로그램 참가비가 포함됩니다.',
+  },
+  {
+    question: '준비물은 무엇인가요?',
+    answer: '개인 세면도구, 성경, 필기도구, 편한 복장을 준비해 주세요.',
+  },
+  {
+    question: '사전등록과 일반등록의 차이는?',
+    answer: '사전등록은 마감일 전까지 신청 시 30,000원, 이후 일반등록은 35,000원입니다.',
+  },
+]
 
 export default function Camp31DetailPage() {
   const [showApplicationModal, setShowApplicationModal] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft)
 
-  // 모집 상태 (캠프 종료 - 다음 캠프 시 true로 변경하고 applicationFormUrl 업데이트)
+  // 모집 상태 (다음 캠프 시 true로 변경하고 applicationFormUrl 업데이트)
   const isApplicationPeriod = false
-  const applicationFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeB900CUIbpo9sjGRnBa2BDBp_QWuRDy-6lju6bm8_Z399f0Q/viewform?usp=dialog"
+  const applicationFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeB900CUIbpo9sjGRnBa2BDBp_QWuRDy-6lju6bm8_Z399f0Q/viewform?usp=dialog'
 
-  // 카운트다운 타이머
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft())
-    }, 1000)
-
-    return () => clearInterval(timer)
+    const previousTitle = document.title
+    document.title = '31 CAMP : RE:BUILDING | AURI COMMUNITY'
+    return () => {
+      document.title = previousTitle
+    }
   }, [])
 
-  // 스크롤 감지
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100)
-    }
-    window.addEventListener('scroll', handleScroll)
+    const handleScroll = () => setIsScrolled(window.scrollY > window.innerHeight * 0.72)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  return (
-    <div className="min-h-screen bg-black text-white">
-      <Navigation />
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false)
+        setShowApplicationModal(false)
+      }
+    }
+    const handleResize = () => {
+      if (window.innerWidth / window.innerHeight > 1.1) setIsMenuOpen(false)
+    }
 
-      {/* Floating CTA Button */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        <button
-          onClick={() => setShowApplicationModal(true)}
-          className="px-8 py-4 bg-white text-black font-medium tracking-wide hover:bg-white/90 transition-all shadow-2xl shadow-white/20"
-        >
-          지금 신청하기
-        </button>
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('resize', handleResize)
+    document.body.style.overflow = isMenuOpen || showApplicationModal ? 'hidden' : ''
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('resize', handleResize)
+      document.body.style.overflow = ''
+    }
+  }, [isMenuOpen, showApplicationModal])
+
+  const openApplication = () => {
+    setIsMenuOpen(false)
+    setShowApplicationModal(true)
+  }
+
+  return (
+    <div className={`camp31-page ${isMenuOpen ? 'is-menu-open' : ''}`}>
+      <section className="camp31-stage" aria-labelledby="camp31-title">
+        <div className="camp31-plate" aria-hidden="true">
+          <video autoPlay muted loop playsInline preload="metadata" poster={getAssetPath('/images/31camp-poster.jpeg')}>
+            <source src={CAMP31_BACKGROUND_VIDEO} type="video/mp4" />
+          </video>
+        </div>
+
+        <CampDetailNavigation open={isMenuOpen} onOpenChange={setIsMenuOpen} />
+
+        <main className="camp31-hero">
+          <p className="camp31-eyebrow">AURI COMMUNITY PRESENTS · 2026</p>
+          <h1 id="camp31-title">
+            <span>31 CAMP</span>
+            <span>RE:BUILDING</span>
+          </h1>
+          <p className="camp31-hero-copy">
+            <span>무너진 것을 다시 세우는 시간.</span>
+            <span>함께 예배하고, 나누고, 회복하는 1박 2일의 여정.</span>
+          </p>
+          <div className="camp31-hero-actions">
+            <button className="camp31-pill" onClick={openApplication}>참가 신청</button>
+            <a href="#camp-story" className="camp31-ghost-link">
+              캠프 이야기 <ArrowRight aria-hidden="true" />
+            </a>
+          </div>
+        </main>
+
+        <div className="camp31-fact-strip" aria-label="캠프 핵심 정보">
+          {campFacts.map((fact) => (
+            <div className="camp31-fact" key={fact.label}>
+              <span className="camp31-fact-number">{fact.number}</span>
+              <span className="camp31-fact-label">{fact.label}</span>
+              <strong>{fact.value}</strong>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <button
+        className={`camp31-floating-cta ${isScrolled ? 'is-visible' : ''}`}
+        onClick={openApplication}
+        aria-hidden={!isScrolled}
+        tabIndex={isScrolled ? 0 : -1}
+      >
+        참가 신청
+      </button>
+
+      <section id="camp-story" className="camp31-editorial camp31-section">
+        <div className="camp31-section-kicker">01 — STORY</div>
+        <div className="camp31-story-grid">
+          <div className="camp31-story-title">
+            <span aria-hidden="true">31</span>
+            <h2>다시 세우는<br />우리의 믿음과 삶</h2>
+          </div>
+          <div className="camp31-story-copy">
+            <blockquote>
+              “또 그들에게 하나님의 선한 손이 나를 도우신 일과 왕이 내게 이른 말씀을 전하였더니 그들의 말이 일어나 건축하자 하고 모두 힘을 내어 이 선한 일을 하려 하매”
+              <cite>느헤미야 2:18</cite>
+            </blockquote>
+            <p>
+              31 CAMP는 느헤미야의 심정으로 무너진 성벽을 다시 세우듯,
+              우리의 신앙과 삶을 RE:BUILDING 하는 1박 2일의 특별한 여정입니다.
+            </p>
+            <p>
+              31명의 청년이 함께 예배하고, 나누고, 회복하며 하나님과의 깊은 만남을 경험합니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="camp31-information camp31-section" aria-labelledby="information-title">
+        <div className="camp31-section-kicker">02 — INFORMATION</div>
+        <div className="camp31-section-heading">
+          <h2 id="information-title">머무는 이틀의<br />필요한 정보</h2>
+          <p>캠프에 필요한 핵심 안내를 한눈에 확인하세요.</p>
+        </div>
+        <dl className="camp31-info-list">
+          {campFacts.map((fact) => (
+            <div key={fact.label}>
+              <dt><span>{fact.number}</span>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section className="camp31-visuals camp31-section" aria-labelledby="visuals-title">
+        <div className="camp31-section-kicker">03 — CAMP GUIDE</div>
+        <div className="camp31-section-heading">
+          <h2 id="visuals-title">포스터와<br />타임 테이블</h2>
+          <p>31 CAMP의 전체 안내와 이틀의 흐름입니다.</p>
+        </div>
+        <div className="camp31-visual-grid">
+          <figure>
+            <ImageWithFallback
+              src={getAssetPath('/images/31camp-poster.jpeg')}
+              alt="31 CAMP 포스터"
+              className="camp31-guide-image"
+            />
+            <figcaption><span>01</span>OFFICIAL POSTER</figcaption>
+          </figure>
+          <figure>
+            <ImageWithFallback
+              src={getAssetPath('/images/31camp-schedule.png')}
+              alt="31 CAMP 스케줄"
+              className="camp31-guide-image"
+            />
+            <figcaption><span>02</span>TIME TABLE</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="camp31-film camp31-section" aria-labelledby="camp31-film-title">
+        <div className="camp31-section-kicker">04 — CAMP FILM</div>
+        <div className="camp31-section-heading">
+          <h2 id="camp31-film-title">함께 세운<br />우리의 순간</h2>
+          <p>함께 예배하고 나누며 다시 세워진 31 CAMP의 시간을 영상으로 만나보세요.</p>
+        </div>
+        <div className="camp31-film-frame">
+          <iframe
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            src={CAMP31_YOUTUBE_URL}
+            title="31 CAMP 영상"
+          />
+        </div>
+      </section>
+
+      <section className="camp31-location camp31-section" aria-labelledby="location-title">
+        <div className="camp31-section-kicker">05 — LOCATION</div>
+        <div className="camp31-location-grid">
+          <div className="camp31-location-copy">
+            <h2 id="location-title">일산하나교회</h2>
+            <p><MapPin aria-hidden="true" />경기도 고양시 일산동구 애니골길 18-21</p>
+            <span>31 CAMP의 예배와 교제가 시작되는 곳</span>
+          </div>
+          <div className="camp31-map">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3158.148282850283!2d126.78888737607612!3d37.66922337201218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9000bbd30cdd%3A0x7a21659847d35a7f!2z7J287IKw7ZWY64KY6rWQ7ZqM!5e0!3m2!1sko!2skr!4v1769490816671!5m2!1sko!2skr"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="일산하나교회 위치"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="camp31-faq camp31-section" aria-labelledby="faq-title">
+        <div className="camp31-section-kicker">06 — FAQ</div>
+        <div className="camp31-faq-grid">
+          <div className="camp31-section-heading">
+            <h2 id="faq-title">오시기 전에<br />확인해 주세요</h2>
+          </div>
+          <div className="camp31-faq-list">
+            {faqs.map((item, index) => (
+              <details key={item.question}>
+                <summary><span>{String(index + 1).padStart(2, '0')}</span>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="camp31-final-cta">
+        <p>AURI COMMUNITY · 31 CAMP</p>
+        <h2>다시 세우는 여정에<br />함께하세요.</h2>
+        <span>31명의 자리, 당신을 기다립니다.</span>
+        <button className="camp31-pill" onClick={openApplication}>참가 신청하기</button>
+      </section>
+
+      <div className="camp31-back-link">
+        <Link to="/camp"><ArrowLeft aria-hidden="true" />캠프 목록으로 돌아가기</Link>
       </div>
 
-      {/* Hero Section - Full Screen */}
-      <section className="min-h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black"></div>
-          {/* Gradient Blobs */}
-          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-purple-500/10 rounded-full blur-[128px]"></div>
-          <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]"></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-block mb-8">
-            <span className="text-xs tracking-[0.3em] text-white/50 uppercase">AURI Community Presents</span>
-          </div>
-
-          {/* Main Title */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight mb-4">
-            31 CAMP
-          </h1>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-extralight tracking-wide text-white/80 mb-12">
-            RE:BUILDING
-          </p>
-
-          {/* Verse */}
-          <div className="mb-16">
-            <p className="text-sm md:text-base text-white/60 font-light italic max-w-2xl mx-auto leading-relaxed">
-              "또 그들에게 하나님의 선한 손이 나를 도우신 일과 왕이 내게 이른 말씀을 전하였더니<br />
-              그들의 말이 일어나 건축하자 하고 모두 힘을 내어 이 선한 일을 하려 하매"
-            </p>
-            <p className="text-xs text-white/40 mt-4 tracking-wider">느헤미야 2:18</p>
-          </div>
-
-          {/* Countdown */}
-          <div className="flex justify-center gap-8 md:gap-12 mb-16">
-            {[
-              { value: timeLeft.days, label: 'DAYS' },
-              { value: timeLeft.hours, label: 'HRS' },
-              { value: timeLeft.minutes, label: 'MIN' },
-              { value: timeLeft.seconds, label: 'SEC' }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-5xl font-extralight tracking-tight">
-                  {String(item.value).padStart(2, '0')}
-                </div>
-                <div className="text-[10px] md:text-xs tracking-[0.2em] text-white/40 mt-2">
-                  {item.label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA Button */}
-          <button
-            onClick={() => setShowApplicationModal(true)}
-            className="group inline-flex items-center gap-3 px-10 py-4 border border-white/30 text-white font-light tracking-wider hover:bg-white hover:text-black transition-all duration-500"
-          >
-            <span>참가 신청</span>
-            <span className="text-xs opacity-50">31명 한정</span>
-          </button>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-          <ChevronDown className="w-6 h-6 text-white/30" />
-        </div>
-      </section>
-
-      {/* Info Section */}
-      <section className="py-32 px-6">
-        <div className="max-w-5xl mx-auto">
-          {/* Section Title */}
-          <div className="text-center mb-20">
-            <span className="text-xs tracking-[0.3em] text-white/40 uppercase">Information</span>
-          </div>
-
-          {/* Info Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10">
-            {[
-              { icon: Calendar, label: '일시', value: '3월 1일(주일) 저녁', sub: '~ 2일(월) 오후', color: 'text-blue-400' },
-              { icon: MapPin, label: '장소', value: '일산하나교회', sub: '경기 고양시 일산동구', color: 'text-green-400' },
-              { icon: Users, label: '대상', value: '청년 31명', sub: '선착순 마감', color: 'text-purple-400' },
-              { icon: Clock, label: '참가비', value: '사전 30,000원', sub: '일반 35,000원', color: 'text-orange-400' }
-            ].map((item, index) => (
-              <div key={index} className="bg-black p-8 md:p-10 text-center">
-                <item.icon className={`w-5 h-5 mx-auto mb-6 ${item.color}`} />
-                <div className="text-[10px] tracking-[0.2em] text-white/40 uppercase mb-3">{item.label}</div>
-                <div className="text-lg font-light mb-1">{item.value}</div>
-                <div className="text-sm text-white/50">{item.sub}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="py-32 px-6 border-t border-white/5 relative overflow-hidden">
-        {/* Gradient Blob */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[100px]"></div>
-        <div className="max-w-3xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <span className="text-xs tracking-[0.3em] text-white/40 uppercase">About</span>
-          </div>
-
-          <div className="space-y-8 text-center">
-            <p className="text-xl md:text-2xl font-extralight leading-relaxed text-white/80">
-              무너진 것을 다시 세우는 시간
-            </p>
-            <p className="text-base md:text-lg font-light leading-loose text-white/60">
-              31 CAMP는 느헤미야의 심정으로<br />
-              무너진 성벽을 다시 세우듯,<br />
-              우리의 신앙과 삶을 RE:BUILDING 하는<br />
-              1박 2일의 특별한 여정입니다.
-            </p>
-            <p className="text-base md:text-lg font-light leading-loose text-white/60">
-              31명의 청년이 모여<br />
-              함께 예배하고, 나누고, 회복하는<br />
-              하나님과의 깊은 만남을 경험합니다.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Poster Section */}
-      <section className="py-32 px-6 border-t border-white/5">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-xs tracking-[0.3em] text-white/40 uppercase">Poster</span>
-          </div>
-
-          <div className="relative">
-            <ImageWithFallback
-              src={getAssetPath("/images/31camp-poster.jpeg")}
-              alt="31 CAMP 포스터"
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Schedule Section */}
-      <section className="py-32 px-6 border-t border-white/5">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="text-xs tracking-[0.3em] text-white/40 uppercase">Schedule</span>
-          </div>
-
-          <div className="relative">
-            <ImageWithFallback
-              src={getAssetPath("/images/31camp-schedule.png")}
-              alt="31 CAMP 스케줄"
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Location Section */}
-      <section className="py-32 px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="text-xs tracking-[0.3em] text-white/40 uppercase">Location</span>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-extralight">일산하나교회</h3>
-              <div className="space-y-3 text-white/60 font-light">
-                <p className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 mt-1 flex-shrink-0 text-green-400" />
-                  <span>경기도 고양시 일산동구 애니골길 18-21</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="aspect-video bg-zinc-900 rounded overflow-hidden">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3158.148282850283!2d126.78888737607612!3d37.66922337201218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c9000bbd30cdd%3A0x7a21659847d35a7f!2z7J287IKw7ZWY64KY6rWQ7ZqM!5e0!3m2!1sko!2skr!4v1769490816671!5m2!1sko!2skr"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="일산하나교회 위치"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-32 px-6 border-t border-white/5">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="text-xs tracking-[0.3em] text-white/40 uppercase">FAQ</span>
-          </div>
-
-          <div className="space-y-8">
-            {[
-              { q: '참가 대상이 어떻게 되나요?', a: '청년(대학생, 직장인)을 대상으로 하며, 31명 선착순으로 마감됩니다.' },
-              { q: '참가비에는 무엇이 포함되나요?', a: '1박 숙박, 3식 식사, 모든 프로그램 참가비가 포함됩니다.' },
-              { q: '준비물은 무엇인가요?', a: '개인 세면도구, 성경, 필기도구, 편한 복장을 준비해 주세요.' },
-              { q: '사전등록과 일반등록의 차이는?', a: '사전등록은 마감일 전까지 신청 시 30,000원, 이후 일반등록은 35,000원입니다.' }
-            ].map((item, index) => (
-              <div key={index} className="border-b border-white/10 pb-8">
-                <h4 className="text-white font-light mb-3">{item.q}</h4>
-                <p className="text-white/50 text-sm font-light leading-relaxed">{item.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-32 px-6 border-t border-white/5 relative overflow-hidden">
-        {/* Gradient Blobs */}
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-[100px]"></div>
-        <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-blue-500/10 rounded-full blur-[100px]"></div>
-        <div className="max-w-2xl mx-auto text-center relative z-10">
-          <p className="text-xs tracking-[0.3em] text-white/40 uppercase mb-8">Join Us</p>
-          <h2 className="text-3xl md:text-4xl font-extralight mb-6">
-            다시 세우는 여정에<br />함께하세요
-          </h2>
-          <p className="text-white/50 font-light mb-12">
-            31명의 자리, 당신을 기다립니다
-          </p>
-          <button
-            onClick={() => setShowApplicationModal(true)}
-            className="px-12 py-5 bg-white text-black font-light tracking-wider hover:bg-white/90 transition-all"
-          >
-            참가 신청하기
-          </button>
-        </div>
-      </section>
-
-      {/* Back to Camp List */}
-      <section className="py-16 px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-          <Link to="/camp" className="inline-flex items-center text-white/40 hover:text-white transition-colors text-sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            캠프 목록으로 돌아가기
-          </Link>
-        </div>
-      </section>
-
-      {/* Application Modal */}
       {showApplicationModal && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-900 max-w-md w-full p-8 border border-white/10">
-            <div className="text-center space-y-6">
-              <h3 className="text-xl font-light tracking-wide">31 CAMP 신청</h3>
+        <div className="camp31-modal-backdrop" onClick={() => setShowApplicationModal(false)}>
+          <div className="camp31-modal" role="dialog" aria-modal="true" aria-labelledby="application-title" onClick={(event) => event.stopPropagation()}>
+            <button className="camp31-modal-close" onClick={() => setShowApplicationModal(false)} aria-label="닫기">×</button>
+            <p>31 CAMP · RE:BUILDING</p>
+            <h3 id="application-title">31 CAMP 신청</h3>
 
-              {isApplicationPeriod ? (
-                <div className="space-y-6">
-                  <div className="py-4 border-y border-white/10">
-                    <p className="text-white/60 text-sm font-light">
-                      신청서를 작성하시면 담당자가 확인 후<br />연락드립니다.
-                    </p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <button
-                      onClick={() => {
-                        window.open(applicationFormUrl, '_blank')
-                        setShowApplicationModal(false)
-                      }}
-                      className="w-full py-4 bg-white text-black font-light tracking-wider hover:bg-white/90 transition-colors"
-                    >
-                      신청서 작성하기
-                    </button>
-                    <button
-                      onClick={() => setShowApplicationModal(false)}
-                      className="w-full py-4 border border-white/20 text-white font-light tracking-wider hover:bg-white/5 transition-colors"
-                    >
-                      닫기
-                    </button>
-                  </div>
+            {isApplicationPeriod ? (
+              <>
+                <div className="camp31-modal-message">
+                  신청서를 작성하시면 담당자가 확인 후 연락드립니다.
                 </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="py-6 border-y border-white/10">
-                    <p className="text-white/80 text-lg font-light mb-2">
-                      이번 캠프는 종료되었습니다
-                    </p>
-                    <p className="text-white/50 text-sm font-light">
-                      함께해 주셔서 감사합니다!<br />
-                      다음 캠프에서 다시 만나요
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowApplicationModal(false)}
-                    className="w-full py-4 border border-white/20 text-white font-light tracking-wider hover:bg-white/5 transition-colors"
-                  >
-                    확인
-                  </button>
+                <button
+                  className="camp31-pill"
+                  onClick={() => {
+                    window.open(applicationFormUrl, '_blank', 'noopener,noreferrer')
+                    setShowApplicationModal(false)
+                  }}
+                >
+                  신청서 작성하기
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="camp31-modal-message">
+                  <strong>이번 캠프는 종료되었습니다.</strong>
+                  함께해 주셔서 감사합니다.<br />다음 캠프에서 다시 만나요.
                 </div>
-              )}
-            </div>
+                <button className="camp31-pill camp31-pill-outline" onClick={() => setShowApplicationModal(false)}>확인</button>
+              </>
+            )}
           </div>
         </div>
       )}
