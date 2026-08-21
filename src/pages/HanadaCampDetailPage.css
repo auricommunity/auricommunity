@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+
+html.hanada-editorial-document,
+body.hanada-editorial-body,
+body.hanada-editorial-body #root {
+  height: 100%;
+}
+
+body.hanada-editorial-body {
+  overflow-x: hidden;
+  background: #000;
+  color: #fff;
+  font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hanada-editorial-page {
+  font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+  scroll-behavior: smooth;
+}
+
+.hanada-editorial-page .hanada-editorial-title {
+  line-height: .95;
+  letter-spacing: -.04em;
+}
+
+.hanada-editorial-page a {
+  text-decoration: none;
+}
+
+.hanada-editorial-page summary::-webkit-details-marker {
+  display: none;
+}
+
+.hanada-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.84);
+  backdrop-filter: blur(18px);
+}
+
+.hanada-modal {
+  position: relative;
+  width: min(470px, 100%);
+  padding: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.hanada-modal > p {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.hanada-modal h3 {
+  margin: 0;
+  font-size: 31px;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+.hanada-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 28px;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.hanada-modal-close:hover {
+  color: #fff;
+}
+
+.hanada-modal-message {
+  margin: 34px 0 28px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.hanada-modal-message strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.hanada-modal-confirm {
+  width: 100%;
+  padding: 14px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.hanada-modal-confirm:hover,
+.hanada-modal-confirm:focus-visible {
+  background: #fff;
+  color: #000;
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .hanada-modal {
+    padding: 40px 26px 26px;
+  }
+}

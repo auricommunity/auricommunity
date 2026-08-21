@@ -82,14 +82,16 @@ export default function CampPage() {
                     alt={camp.title}
                     className="w-full h-52 md:h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 left-4">
-                    <span className={`px-2.5 py-1 text-[10px] tracking-wider font-medium uppercase ${
-                      camp.status === '모집중' ? 'bg-white text-black' :
-                      camp.status === '정기캠프' ? 'bg-white/20 text-white' : 'bg-white/10 text-white/60'
-                    }`}>
-                      {camp.status}
-                    </span>
-                  </div>
+                  {camp.status && (
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-2.5 py-1 text-[10px] tracking-wider font-medium uppercase ${
+                        camp.status === '모집중' ? 'bg-white text-black' :
+                        camp.status === '정기캠프' ? 'bg-white/20 text-white' : 'bg-white/10 text-white/60'
+                      }`}>
+                        {camp.status}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* 정보 */}
@@ -118,9 +120,9 @@ export default function CampPage() {
                     {camp.description}
                   </p>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/60 text-sm font-light">{camp.price}</span>
-                    <span className="text-[11px] tracking-[0.15em] text-white/20 uppercase group-hover:text-white/50 transition-colors">
+                  <div className="flex items-end justify-between gap-6">
+                    <span className="max-w-[80%] text-sm font-light leading-6 text-white/60">{camp.price}</span>
+                    <span className="shrink-0 text-[11px] tracking-[0.15em] text-white/20 uppercase group-hover:text-white/50 transition-colors">
                       자세히 보기 →
                     </span>
                   </div>

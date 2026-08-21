@@ -1,341 +1,333 @@
-import { useState, useEffect, useRef } from 'react'
-import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowLeft, MapPin, ChevronRight } from 'lucide-react'
-import Navigation from '../components/Navigation'
-import Footer from '../components/Footer'
+import { useEffect, useState } from 'react'
+import CampDetailNavigation from '../components/CampDetailNavigation'
+import { HANADA_CAMP_YOUTUBE_URL } from '../config/hanadaCamp'
 import { getAssetPath } from '../utils/path'
+import './HanadaCampDetailPage.css'
 
-// 히어로 배경 미디어 설정 - 이미지 또는 영상 경로를 넣으면 배경이 활성화됩니다
-const heroMedia = {
-  // 영상 경로 (예: "/videos/hanada-hero.mp4")
-  video: "",
-  // 이미지 경로 (예: "/images/hanada-hero.jpg")
-  image: "",
+const CAMP_VIDEO_URL = getAssetPath('/videos/camp.mp4')
+const HANADA_POSTER_IMAGE = getAssetPath('/images/hanada-camp-poster.jpg')
+const HANADA_SCHEDULE_IMAGE = getAssetPath('/images/hanada-camp-schedule.jpg')
+
+function getYouTubeEmbedUrl(value: string) {
+  const source = value.trim()
+  if (!source) return ''
+
+  try {
+    const url = new URL(source)
+    const hostname = url.hostname.replace(/^www\./, '')
+    const isYouTube = hostname === 'youtube.com' || hostname.endsWith('.youtube.com')
+    const isYouTubeNoCookie = hostname === 'youtube-nocookie.com' || hostname.endsWith('.youtube-nocookie.com')
+    let videoId = ''
+
+    if (hostname === 'youtu.be') {
+      videoId = url.pathname.split('/').filter(Boolean)[0] ?? ''
+    } else if (isYouTube || isYouTubeNoCookie) {
+      const parts = url.pathname.split('/').filter(Boolean)
+      if (parts[0] === 'embed' || parts[0] === 'shorts' || parts[0] === 'live') {
+        videoId = parts[1] ?? ''
+      } else {
+        videoId = url.searchParams.get('v') ?? ''
+      }
+    }
+
+    if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) return ''
+    return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
+  } catch {
+    return ''
+  }
 }
 
-function useReveal(threshold = 0.12) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.unobserve(el) } },
-      { threshold }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [threshold])
-  return { ref, visible }
-}
+const HANADA_YOUTUBE_EMBED_URL = getYouTubeEmbedUrl(HANADA_CAMP_YOUTUBE_URL)
 
-function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
-  const { ref, visible } = useReveal()
-  return (
-    <div ref={ref} className={className} style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? 'none' : 'translateY(20px)',
-      transition: `opacity 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
-    }}>
-      {children}
-    </div>
-  )
-}
-
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="border-b border-neutral-200">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between py-6 text-left group">
-        <span className="text-[15px] text-neutral-700 font-normal group-hover:text-black transition-colors pr-4">{question}</span>
-        <ChevronRight className={`w-4 h-4 text-neutral-300 transition-transform duration-300 flex-shrink-0 ${open ? 'rotate-90' : ''}`} />
-      </button>
-      <div className="overflow-hidden transition-all duration-400 ease-out" style={{ maxHeight: open ? '160px' : '0' }}>
-        <p className="text-neutral-500 text-sm font-light leading-relaxed pb-6">{answer}</p>
-      </div>
-    </div>
-  )
-}
+const faqItems = [
+  ['하나다캠프는 어떤 캠프인가요?', '말씀과 교제 안에서 서로를 깊이 알아가고 하나님 안에서 하나 되는 캠프입니다.'],
+  ['참가 대상은 누구인가요?', '자립 및 미자립 교회 청소년을 위한 캠프입니다.'],
+  ['일정과 장소는 정해졌나요?', '2026년 7월 23일부터 25일까지 제주청소년수련원에서 진행됩니다.'],
+  ['참가비는 얼마인가요?', '자립교회는 80,000원, 미자립교회는 40,000원입니다. 자립교회는 7월 6일까지 사전등록 시 75,000원입니다.'],
+]
 
 export default function HanadaCampDetailPage() {
-  const [showModal, setShowModal] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const isApplicationPeriod = false
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [showApplicationModal, setShowApplicationModal] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 500)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
+    const previousTitle = document.title
+
+    document.title = '하나다 CAMP | AURI COMMUNITY'
+    document.documentElement.classList.add('hanada-editorial-document')
+    document.body.classList.add('hanada-editorial-body')
+
+    return () => {
+      document.title = previousTitle
+      document.documentElement.classList.remove('hanada-editorial-document')
+      document.body.classList.remove('hanada-editorial-body')
+    }
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+        setShowApplicationModal(false)
+      }
+    }
+    const onResize = () => {
+      if (window.innerWidth > 900) setMenuOpen(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('resize', onResize)
+    document.body.style.overflow = menuOpen || showApplicationModal ? 'hidden' : ''
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('resize', onResize)
+      document.body.style.overflow = ''
+    }
+  }, [menuOpen, showApplicationModal])
+
   return (
-    <div className="min-h-screen">
-      <Navigation />
+    <main className="hanada-editorial-page min-h-full w-full overflow-x-hidden bg-black text-white">
+      <section className="relative h-screen min-h-[700px] w-full overflow-hidden bg-black" id="hanada-home">
+        <video
+          aria-hidden="true"
+          autoPlay
+          className="absolute inset-0 h-full w-full object-cover"
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          src={CAMP_VIDEO_URL}
+        />
 
-      {/* Floating CTA */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-8 py-3 bg-black text-white text-sm font-semibold tracking-widest uppercase hover:bg-neutral-800 transition-colors shadow-xl"
-        >
-          Register
-        </button>
-      </div>
+        <CampDetailNavigation open={menuOpen} onOpenChange={setMenuOpen} />
 
-      {/* ═══════ HERO (Dark → Light transition) ═══════ */}
-      <section className="min-h-screen flex flex-col items-center justify-end relative px-6 pb-20 overflow-hidden bg-black text-white">
-        {/* Background media */}
-        <div className="absolute inset-0 z-0">
-          {heroMedia.video && (
-            <video
-              autoPlay muted loop playsInline preload="metadata"
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ pointerEvents: 'none' }}
+        <div className="relative z-10 h-full w-full">
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-0 h-48 bg-gradient-to-b from-transparent to-black" />
+
+          <h1 className="hanada-editorial-title absolute left-4 top-[18%] z-10 text-[14vw] font-medium text-white md:left-10 md:text-[13vw]">
+            hanada
+          </h1>
+          <h1 className="hanada-editorial-title absolute right-4 top-[38%] z-10 text-[14vw] font-medium text-white md:right-10 md:text-[13vw]">
+            camp
+          </h1>
+          <h1 className="hanada-editorial-title absolute left-[18%] top-[58%] z-10 text-[14vw] font-medium text-white md:left-[28%] md:text-[13vw]">
+            together
+          </h1>
+
+          <p className="absolute left-6 top-[46%] z-10 max-w-[240px] text-[15px] leading-snug text-white/90 md:left-10">
+            말씀 안에서 하나 되고,<br />새로운 흐름을 함께 입는 시간
+          </p>
+
+          <div className="absolute right-6 top-[14%] z-10 md:right-24">
+            <div className="flex items-center justify-end gap-3">
+              <span className="hidden h-px w-24 rotate-[20deg] bg-white/40 md:block" />
+              <span className="whitespace-nowrap text-2xl font-medium tracking-tight md:text-4xl">2026.07.23–07.25</span>
+            </div>
+            <p className="mt-1 text-right text-xs text-white/70 md:text-sm">camp date</p>
+          </div>
+
+          <div className="absolute bottom-20 left-6 z-10 md:bottom-24 md:left-20">
+            <div className="flex items-center gap-3">
+              <span className="text-4xl font-medium tracking-tight md:text-5xl">youth</span>
+              <span className="hidden h-px w-24 rotate-[-20deg] bg-white/40 md:block" />
+            </div>
+            <p className="mt-1 text-xs text-white/70 md:text-sm">자립 및 미자립 교회 청소년</p>
+          </div>
+
+          <div className="absolute bottom-16 right-6 z-10 md:bottom-20 md:right-20">
+            <div className="flex items-center justify-end gap-3">
+              <span className="hidden h-px w-24 rotate-[-20deg] bg-white/40 md:block" />
+              <span className="text-4xl font-medium tracking-tight md:text-5xl">JEJU</span>
+            </div>
+            <p className="mt-1 text-right text-xs text-white/70 md:text-sm">제주청소년수련원 / venue</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-[1440px] px-6 py-28 md:px-10 md:py-48" id="hanada-about">
+        <p className="mb-12 text-sm font-medium tracking-[0.18em] text-white/70">01 / about hanada</p>
+        <h2 className="max-w-[1200px] text-[clamp(3.4rem,9vw,9rem)] font-medium leading-[0.92] tracking-[-0.055em]">
+          세상을<br />하나님 나라의<br /><span className="text-white/75">TREND</span>로 입다
+        </h2>
+
+        <div className="mt-20 grid gap-12 border-t border-white/20 pt-10 md:mt-28 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-20">
+          <p className="max-w-[34rem] text-lg font-light leading-8 text-white/75 md:text-xl md:leading-9">
+            하나다캠프는 서로를 깊이 알아가고 말씀 안에서 함께 성장하며,
+            따뜻한 교제를 통해 진정한 공동체를 경험하는 캠프입니다.
+          </p>
+          <blockquote className="max-w-[46rem] text-2xl font-normal leading-[1.45] tracking-[-0.035em] md:text-3xl lg:justify-self-end lg:pl-4">
+            “너희가 내 안에, 내가 너희 안에 거하면 많은 열매를 맺느니라”
+            <cite className="mt-8 block text-sm not-italic tracking-[0.16em] text-white/65">요한복음 15:5</cite>
+          </blockquote>
+        </div>
+      </section>
+
+      <section className="mx-6 grid border-y border-white/20 md:mx-10 md:grid-cols-2 xl:grid-cols-4" aria-label="하나다캠프 기본 정보">
+        {[
+          ['01', 'for', '자립 및 미자립 교회 청소년', ''],
+          ['02', 'date', '2026.07.23 - 07.25', ''],
+          ['03', 'venue', '제주청소년수련원', ''],
+          ['04', 'fee', '자립 80,000원 / 미자립 40,000원', '사전등록 시 자립 75,000원 · 7월 6일까지'],
+        ].map(([number, label, value, note], index) => (
+          <article className={`flex min-h-36 items-center gap-6 py-6 md:min-h-40 md:px-8 md:py-7 ${index > 0 ? 'border-t border-white/20' : ''} ${index % 2 === 1 ? 'md:border-l md:border-t-0' : ''} ${index > 1 ? 'md:border-t' : ''} ${index > 0 ? 'xl:border-l xl:border-t-0' : 'xl:border-t-0'}`} key={label}>
+            <span className="text-sm text-white/55">{number}</span>
+            <div>
+              <p className="mb-2 text-sm tracking-[0.16em] text-white/65">{label}</p>
+              <strong className="text-lg font-normal leading-snug md:text-xl">{value}</strong>
+              {note && <p className="mt-2 text-sm leading-5 text-white/65">{note}</p>}
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="mx-auto w-full max-w-[1440px] px-6 py-28 md:px-10 md:py-48" id="hanada-film">
+        <div className="mb-16 grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:items-end md:gap-24">
+          <div>
+            <p className="mb-12 text-sm font-medium tracking-[0.18em] text-white/70">02 / camp film</p>
+            <h2 className="text-5xl font-medium leading-[0.95] tracking-[-0.05em] md:text-7xl">하나다의 순간을<br />영상으로 만나다</h2>
+          </div>
+          <div className="max-w-lg md:w-max md:max-w-none md:justify-self-end">
+            <p className="text-base font-normal leading-7 text-white/75 md:whitespace-nowrap md:text-[17px] md:leading-8 lg:text-lg">
+              함께 예배하고 웃으며 하나 되어 가는 캠프의 순간을 영상으로 만나보세요.
+            </p>
+            <a
+              aria-label="캠다청 인스타그램 방문하기"
+              className="mt-5 inline-flex items-center gap-3 border-b border-white/30 pb-1 text-sm tracking-[0.08em] text-white/70 transition-colors hover:border-white hover:text-white"
+              href="https://www.instagram.com/camdachung/"
+              rel="noreferrer"
+              target="_blank"
             >
-              <source src={getAssetPath(heroMedia.video)} type="video/mp4" />
-            </video>
-          )}
-          {!heroMedia.video && heroMedia.image && (
-            <img
-              src={getAssetPath(heroMedia.image)}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          )}
-          {/* 오버레이 투명도 조절: bg-black/50 ~ bg-black/80 */}
-          <div className="absolute inset-0 bg-black/60" />
+              <span>영상 자료 · 캠다청</span>
+              <span>@camdachung ↗</span>
+            </a>
+          </div>
         </div>
 
-        <div className="relative z-10 text-center max-w-4xl mx-auto w-full">
-          <p className="text-[10px] tracking-[0.5em] text-white/30 uppercase mb-8">
-            AURI Community Presents
-          </p>
+        <div className="overflow-hidden rounded-[1.5rem] border border-white/20 bg-neutral-900 shadow-2xl md:rounded-[2rem]">
+          {HANADA_YOUTUBE_EMBED_URL ? (
+            <iframe
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="aspect-video w-full bg-black"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              src={HANADA_YOUTUBE_EMBED_URL}
+              title="하나다캠프 영상"
+            />
+          ) : (
+            <video
+              aria-label="하나다캠프 영상"
+              className="aspect-video w-full bg-black object-cover"
+              controls
+              playsInline
+              preload="metadata"
+              src={CAMP_VIDEO_URL}
+            />
+          )}
+        </div>
+      </section>
 
-          <h1 className="text-[clamp(4rem,14vw,12rem)] font-extralight tracking-[-0.04em] leading-[0.85] mb-2">
-            하나다
-          </h1>
-          <p className="text-[clamp(1.5rem,4vw,3rem)] tracking-[0.3em] font-extralight text-white/40 uppercase mb-16">
-            Camp
+      <section className="mx-auto w-full max-w-[1440px] px-6 py-28 md:px-10 md:py-48" id="hanada-programme">
+        <div className="mb-16 grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:items-end md:gap-24">
+          <div>
+            <p className="mb-12 text-sm font-medium tracking-[0.18em] text-white/70">03 / programme</p>
+            <h2 className="text-5xl font-medium leading-[0.95] tracking-[-0.05em] md:text-7xl">poster &amp;<br />timetable</h2>
+          </div>
+          <p className="max-w-lg text-base font-normal leading-7 text-white/75 md:justify-self-end md:text-lg md:leading-8">
+            2026 여름 하나다캠프의 공식 포스터와 전체 일정을 확인해 보세요.
           </p>
+        </div>
 
-          <p className="text-sm md:text-base font-light text-white/30 tracking-[0.15em] mb-20">
-            따뜻한 만남, 하나 되는 우리
-          </p>
+        <div className="grid items-start gap-8 md:grid-cols-2">
+          <figure>
+            <figcaption className="mb-4 flex items-center justify-between text-sm tracking-[0.14em] text-white/65">
+              <span>01 / official poster</span>
+              <span>2026</span>
+            </figcaption>
+            <a aria-label="하나다캠프 공식 포스터 크게 보기" className="block overflow-hidden rounded-[1.5rem] border border-white/20 bg-neutral-900 md:rounded-[2rem]" href={HANADA_POSTER_IMAGE} rel="noreferrer" target="_blank">
+              <img alt="2026 여름 하나다캠프 공식 포스터" className="h-auto w-full transition-transform duration-500 hover:scale-[1.015]" loading="lazy" src={HANADA_POSTER_IMAGE} />
+            </a>
+          </figure>
 
-          {/* Info bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 border-t border-b border-white/10 divide-x divide-white/10">
-            {[
-              { label: 'DATE', value: 'TBA' },
-              { label: 'VENUE', value: 'TBA' },
-              { label: 'FOR', value: 'TBA' },
-              { label: 'PRICE', value: 'TBA' },
-            ].map((item, i) => (
-              <div key={i} className="py-5 md:py-6 text-center">
-                <p className="text-[9px] tracking-[0.3em] text-white/20 uppercase mb-1.5">{item.label}</p>
-                <p className="text-sm font-light text-white/60">{item.value}</p>
-              </div>
+          <figure>
+            <figcaption className="mb-4 flex items-center justify-between text-sm tracking-[0.14em] text-white/65">
+              <span>02 / timetable</span>
+              <span>07.23 — 07.25</span>
+            </figcaption>
+            <a aria-label="하나다캠프 타임테이블 크게 보기" className="block overflow-hidden rounded-[1.5rem] border border-white/20 bg-neutral-900 md:rounded-[2rem]" href={HANADA_SCHEDULE_IMAGE} rel="noreferrer" target="_blank">
+              <img alt="2026 여름 하나다캠프 타임테이블" className="h-auto w-full transition-transform duration-500 hover:scale-[1.015]" loading="lazy" src={HANADA_SCHEDULE_IMAGE} />
+            </a>
+          </figure>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-[1440px] border-t border-white/20 px-6 py-28 md:px-10 md:py-48" id="hanada-faq">
+        <p className="mb-12 text-sm font-medium tracking-[0.18em] text-white/70">04 / faq</p>
+        <div className="grid gap-20 md:grid-cols-[0.7fr_1.3fr]">
+          <h2 className="text-5xl font-medium leading-[0.9] tracking-[-0.05em] md:text-8xl">before<br />we meet</h2>
+          <div>
+            {faqItems.map(([question, answer], index) => (
+              <details className="group border-t border-white/20 last:border-b" key={question}>
+                <summary className="grid min-h-24 cursor-pointer list-none grid-cols-[3rem_1fr_auto] items-center text-base md:text-lg">
+                  <span className="text-sm text-white/55">{String(index + 1).padStart(2, '0')}</span>
+                  {question}
+                  <b className="text-2xl font-light transition-transform group-open:rotate-45">+</b>
+                </summary>
+                <p className="mb-8 ml-12 max-w-xl text-base font-light leading-7 text-white/70 md:text-lg">{answer}</p>
+              </details>
             ))}
           </div>
         </div>
-
-        {/* Transition to white */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-white" />
       </section>
 
-      {/* ═══════ ABOUT (Light) ═══════ */}
-      <section className="bg-white text-neutral-800 px-6 py-28 md:py-36">
-        <div className="max-w-2xl mx-auto">
-          <Reveal>
-            <p className="text-[10px] tracking-[0.4em] text-neutral-400 uppercase mb-12 text-center">About the Camp</p>
-          </Reveal>
-
-          <Reveal delay={0.15}>
-            <div className="text-center space-y-10">
-              <blockquote className="relative">
-                <div className="text-neutral-200 text-6xl font-serif leading-none mb-4">"</div>
-                <p className="text-[15px] text-neutral-500 font-light italic leading-relaxed -mt-6">
-                  너희가 내 안에, 내가 너희 안에 거하면<br />
-                  많은 열매를 맺느니라
-                </p>
-                <p className="text-[11px] text-neutral-400 mt-4 tracking-[0.15em]">— 요한복음 15:5</p>
-              </blockquote>
-
-              <div className="w-8 h-px bg-neutral-200 mx-auto" />
-
-              <p className="text-base md:text-lg font-light leading-[2] text-neutral-500">
-                하나다캠프는 서로를 깊이 알아가고,<br />
-                말씀 안에서 함께 성장하며,<br />
-                따뜻한 교제를 통해<br />
-                진정한 공동체를 경험하는 캠프입니다.
-              </p>
-            </div>
-          </Reveal>
-        </div>
+      <section className="flex min-h-[720px] flex-col items-center justify-center px-6 py-28 text-center">
+        <p className="mb-12 text-sm font-medium tracking-[0.18em] text-white/70">hanada camp / coming soon</p>
+        <h2 className="text-[clamp(3.5rem,9vw,9rem)] font-medium leading-[0.9] tracking-[-0.055em]">one in faith<br />together</h2>
+        <p className="mt-10 text-base font-light text-white/70 md:text-lg">하나다캠프의 다음 이야기가 곧 시작됩니다.</p>
+        <button
+          className="mt-10 rounded-full bg-white px-8 py-4 text-sm text-black transition-colors hover:bg-neutral-200"
+          onClick={() => setShowApplicationModal(true)}
+          type="button"
+        >
+          참가 신청
+        </button>
       </section>
 
-      {/* ═══════ PROGRAMME (Light gray) ═══════ */}
-      <section className="bg-neutral-50 text-neutral-800 px-6 py-28 md:py-36">
-        <div className="max-w-3xl mx-auto">
-          <Reveal>
-            <p className="text-[10px] tracking-[0.4em] text-neutral-400 uppercase mb-16 text-center">Programme</p>
-          </Reveal>
-
-          {[
-            { day: 'I', title: '첫째 날', items: ['도착 및 등록', '오프닝 워십', '말씀 집회', '소그룹 나눔', '교제의 시간'] },
-            { day: 'II', title: '둘째 날', items: ['아침 큐티', '말씀 집회', '공동체 활동', '클로징 워십', '마무리 및 귀가'] },
-          ].map((d, di) => (
-            <Reveal key={di} delay={di * 0.15}>
-              <div className={`grid md:grid-cols-[1fr_2fr] gap-8 py-12 ${di > 0 ? 'border-t border-neutral-200' : ''}`}>
-                <div className="flex items-baseline gap-4">
-                  <span className="text-4xl md:text-5xl font-extralight text-neutral-200">{d.day}</span>
-                  <span className="text-lg font-normal text-neutral-700">{d.title}</span>
-                </div>
-                <div className="space-y-4">
-                  {d.items.map((item, ii) => (
-                    <div key={ii} className="flex items-center gap-4 group">
-                      <span className="text-[10px] text-neutral-300 tabular-nums w-4">{String(ii + 1).padStart(2, '0')}</span>
-                      <div className="h-px flex-1 bg-neutral-200 group-hover:bg-neutral-400 transition-colors" />
-                      <span className="text-sm text-neutral-600 font-light">{item}</span>
-                    </div>
-                  ))}
-                  <p className="text-[11px] text-neutral-400 italic pt-2">* 세부 일정은 추후 공지됩니다</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════ VENUE (White) ═══════ */}
-      <section className="bg-white text-neutral-800 px-6 py-28 md:py-36">
-        <div className="max-w-3xl mx-auto">
-          <Reveal>
-            <p className="text-[10px] tracking-[0.4em] text-neutral-400 uppercase mb-16 text-center">Venue</p>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              <div>
-                <h3 className="text-xl font-normal text-neutral-700 mb-4">장소 미정</h3>
-                <p className="flex items-start gap-3 text-neutral-500 font-light text-sm">
-                  <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-neutral-400" />
-                  <span>추후 공지될 예정입니다</span>
-                </p>
-              </div>
-              <div className="aspect-[4/3] border border-neutral-200 bg-neutral-50 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-5 h-5 text-neutral-300 mx-auto mb-2" />
-                  <p className="text-[11px] text-neutral-400 tracking-wider">지도 준비중</p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ═══════ FAQ (Light gray) ═══════ */}
-      <section className="bg-neutral-50 text-neutral-800 px-6 py-28 md:py-36">
-        <div className="max-w-2xl mx-auto">
-          <Reveal>
-            <p className="text-[10px] tracking-[0.4em] text-neutral-400 uppercase mb-14 text-center">
-              Frequently Asked Questions
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <div>
-              {[
-                { q: '하나다캠프는 어떤 캠프인가요?', a: '하나다캠프는 따뜻한 교제와 깊은 말씀 나눔을 통해 하나님 안에서 하나 되는 것을 경험하는 캠프입니다.' },
-                { q: '참가 대상은 누구인가요?', a: '참가 대상은 추후 공지될 예정입니다. 공지사항을 확인해 주세요.' },
-                { q: '참가비는 얼마인가요?', a: '참가비는 아직 미정입니다. 확정되는 대로 안내드리겠습니다.' },
-                { q: '언제, 어디서 진행되나요?', a: '일시와 장소는 추후 공지될 예정입니다. 확정되는 대로 안내드리겠습니다.' },
-                { q: '준비물은 무엇인가요?', a: '기본적으로 개인 세면도구, 성경, 필기도구를 준비해 주세요. 세부 사항은 캠프 확정 후 안내됩니다.' },
-              ].map((item, i) => (
-                <FaqItem key={i} question={item.q} answer={item.a} />
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ═══════ CTA (Dark) ═══════ */}
-      <section className="bg-black text-white px-6 py-28 md:py-36">
-        <Reveal>
-          <div className="max-w-xl mx-auto text-center">
-            <p className="text-[10px] tracking-[0.4em] text-white/30 uppercase mb-10">Join Us</p>
-            <h2 className="text-3xl md:text-4xl font-extralight leading-relaxed text-white/80 mb-4">
-              하나 되는 여정에<br />함께하세요
-            </h2>
-            <p className="text-sm text-white/30 font-light mb-14">
-              캠프가 확정되면 가장 먼저 안내드리겠습니다
-            </p>
+      {showApplicationModal && (
+        <div className="hanada-modal-backdrop" onClick={() => setShowApplicationModal(false)}>
+          <div
+            aria-labelledby="hanada-application-title"
+            aria-modal="true"
+            className="hanada-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
             <button
-              onClick={() => setShowModal(true)}
-              className="px-12 py-4 bg-white text-black text-sm font-semibold tracking-[0.15em] uppercase hover:bg-neutral-100 transition-colors"
+              aria-label="닫기"
+              className="hanada-modal-close"
+              onClick={() => setShowApplicationModal(false)}
+              type="button"
             >
-              Register Now
+              ×
             </button>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* Back */}
-      <section className="bg-black py-12 px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-          <Link to="/camp" className="inline-flex items-center text-white/25 hover:text-white/50 transition-colors text-sm gap-2">
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>캠프 목록</span>
-          </Link>
-        </div>
-      </section>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
-          <div className="bg-white text-neutral-800 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="p-10 text-center space-y-8">
-              <div>
-                <p className="text-[10px] tracking-[0.4em] text-neutral-400 uppercase mb-3">하나다캠프</p>
-                <h3 className="text-lg font-normal tracking-wide">참가 신청</h3>
-              </div>
-
-              {isApplicationPeriod ? (
-                <div className="space-y-6">
-                  <p className="text-neutral-500 text-sm font-light">
-                    신청서를 작성하시면 담당자가<br />확인 후 연락드립니다.
-                  </p>
-                  <div className="space-y-3">
-                    <button className="w-full py-3.5 bg-black text-white text-sm font-semibold tracking-widest uppercase hover:bg-neutral-800 transition-colors">
-                      신청서 작성하기
-                    </button>
-                    <button onClick={() => setShowModal(false)} className="w-full py-3.5 text-neutral-400 text-sm hover:text-neutral-600 transition-colors">
-                      닫기
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-8">
-                  <div className="py-6 border-t border-b border-neutral-100">
-                    <p className="text-neutral-700 text-sm font-normal mb-1.5">아직 준비중입니다</p>
-                    <p className="text-neutral-400 text-xs font-light">
-                      캠프가 확정되면 안내드리겠습니다
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="w-full py-3.5 border border-neutral-200 text-neutral-600 text-sm tracking-wider hover:bg-neutral-50 transition-colors"
-                  >
-                    확인
-                  </button>
-                </div>
-              )}
+            <p>HANADA CAMP · APPLICATION</p>
+            <h3 id="hanada-application-title">하나다캠프 신청</h3>
+            <div className="hanada-modal-message">
+              <strong>이번 캠프는 종료되었습니다.</strong>
+              함께해 주셔서 감사합니다.<br />다음 캠프에서 다시 만나요.
             </div>
+            <button
+              autoFocus
+              className="hanada-modal-confirm"
+              onClick={() => setShowApplicationModal(false)}
+              type="button"
+            >
+              확인
+            </button>
           </div>
         </div>
       )}
-
-      <Footer />
-    </div>
+    </main>
   )
 }
