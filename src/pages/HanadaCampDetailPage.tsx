@@ -151,14 +151,16 @@ export default function HanadaCampDetailPage() {
           세상을<br />하나님 나라의<br /><span className="text-white/75">TREND</span>로 입다
         </h2>
 
-        <div className="mt-20 grid gap-12 border-t border-white/20 pt-10 md:mt-28 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-20">
+        <div className="mt-20 grid gap-12 border-t border-white/20 pt-10 md:mt-28 xl:grid-cols-[0.55fr_1.45fr] xl:items-start xl:gap-16">
           <p className="max-w-[34rem] text-lg font-light leading-8 text-white/75 md:text-xl md:leading-9">
             하나다캠프는 서로를 깊이 알아가고 말씀 안에서 함께 성장하며,
             따뜻한 교제를 통해 진정한 공동체를 경험하는 캠프입니다.
           </p>
-          <blockquote className="max-w-[46rem] text-2xl font-normal leading-[1.45] tracking-[-0.035em] md:text-3xl lg:justify-self-end lg:pl-4">
-            “너희가 내 안에, 내가 너희 안에 거하면 많은 열매를 맺느니라”
-            <cite className="mt-8 block text-sm not-italic tracking-[0.16em] text-white/65">요한복음 15:5</cite>
+          <blockquote className="max-w-[58rem] text-[clamp(1.2rem,1.8vw,1.5rem)] font-normal leading-[1.55] tracking-[-0.04em] xl:justify-self-end xl:pl-4">
+            <span className="block">“너희는 이 세대를 본받지 말고</span>
+            <span className="block">오직 마음을 새롭게 함으로 변화를 받아</span>
+            <span className="block">하나님의 선하시고 기뻐하시고 온전하신 뜻이 무엇인지 분별하도록 하라”</span>
+            <cite className="mt-8 block text-sm not-italic tracking-[0.16em] text-white/65">로마서 12:2</cite>
           </blockquote>
         </div>
       </section>
