@@ -10,6 +10,7 @@ const AndCampDetailPage = lazy(() => import('./pages/AndCampDetailPage'))
 const Camp31DetailPage = lazy(() => import('./pages/Camp31DetailPage'))
 const HanadaCampDetailPage = lazy(() => import('./pages/HanadaCampDetailPage'))
 const ConnectWorshipPage = lazy(() => import('./pages/ConnectWorshipPage'))
+const ConnectWorshipMovementPage = lazy(() => import('./pages/ConnectWorshipMovementPage'))
 const DonationPage = lazy(() => import('./pages/DonationPage'))
 
 // Loading component
@@ -33,6 +34,7 @@ function App() {
         <Route path="/camp/31" element={<Camp31DetailPage />} />
         <Route path="/camp/hanada" element={<HanadaCampDetailPage />} />
         <Route path="/connect-worship" element={<ConnectWorshipPage />} />
+        <Route path="/connect-worship-movement" element={<ConnectWorshipMovementPage />} />
         <Route path="/donation" element={<DonationPage />} />
       </Routes>
     </Suspense>
