@@ -1,0 +1,919 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+
+.connect-movement-page {
+  --connect-white: #f5f4ef;
+  --connect-dim: rgba(245, 244, 239, 0.56);
+  min-height: 100vh;
+  overflow: hidden;
+  background: #050505;
+  color: var(--connect-white);
+  font-family: 'IBM Plex Sans KR', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-synthesis: none;
+}
+
+.connect-movement-page * {
+  box-sizing: border-box;
+}
+
+.connect-movement-hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #050505;
+}
+
+.connect-movement-hero-video,
+.connect-movement-hero-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.connect-movement-hero-video {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.06);
+  animation: connectHeroDrift 18s ease-in-out infinite alternate;
+}
+
+.connect-movement-hero-shade {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.04) 58%, rgba(0, 0, 0, 0.28) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, transparent 30%, rgba(0, 0, 0, 0.72) 100%);
+}
+
+.connect-movement-hero-frame {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 8rem clamp(1.5rem, 4vw, 4.5rem) clamp(2rem, 4vw, 3.75rem);
+}
+
+.connect-movement-section-index,
+.connect-movement-hero-bottom a,
+.connect-movement-side-note {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+
+.connect-movement-hero h1 {
+  margin: 0;
+  font-family: 'Archivo Black', Impact, sans-serif;
+  font-size: clamp(4.4rem, 14.2vw, 14rem);
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  line-height: 0.72;
+}
+
+.connect-movement-hero h1 span {
+  display: block;
+}
+
+.connect-movement-hero-line {
+  opacity: 0;
+  transform: translateY(0.7em);
+  animation: connectTitleIn 1.1s cubic-bezier(0.2, 0.75, 0.22, 1) forwards;
+}
+
+.connect-movement-hero-line:nth-child(2) {
+  animation-delay: 140ms;
+}
+
+.connect-movement-hero h1 span:last-child {
+  margin-left: clamp(0rem, 8vw, 9rem);
+}
+
+.connect-movement-hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: clamp(2rem, 6vh, 4.5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+.connect-movement-hero-meta {
+  opacity: 0;
+  animation: connectMetaIn 900ms 520ms ease-out forwards;
+}
+
+.connect-movement-hero-bottom p {
+  max-width: 34rem;
+  margin: 0;
+  font-size: clamp(1.2rem, 2.1vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.035em;
+}
+
+.connect-movement-hero-bottom a {
+  flex: 0 0 auto;
+  color: inherit;
+  text-decoration: none;
+}
+
+.connect-movement-hero-bottom a span {
+  margin-left: 0.7rem;
+}
+
+.connect-movement-side-note {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 1.2rem;
+  margin: 0;
+  transform: translate(45%, -50%) rotate(90deg);
+  color: rgba(255, 255, 255, 0.58);
+  white-space: nowrap;
+}
+
+.connect-movement-word {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  grid-template-columns: minmax(5rem, 0.8fr) minmax(0, 5fr);
+  overflow: hidden;
+  padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 4vw, 4.5rem);
+  background: var(--connect-white);
+  color: #090909;
+}
+
+.connect-movement-section-index {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.connect-movement-word-copy {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+}
+
+.connect-movement-word-lead,
+.connect-movement-word-end,
+.connect-movement-word-copy cite {
+  margin: 0;
+}
+
+.connect-movement-word-lead {
+  font-size: clamp(1.2rem, 2vw, 2rem);
+}
+
+.connect-movement-word h2 {
+  margin: 0.08em 0 0.2em -0.06em;
+  font-family: 'Nanum Myeongjo', Georgia, serif;
+  font-size: clamp(4.5rem, 12vw, 12rem);
+  font-weight: 800;
+  letter-spacing: -0.095em;
+  line-height: 0.88;
+}
+
+.connect-movement-word-end {
+  max-width: 48rem;
+  font-family: 'Nanum Myeongjo', Georgia, serif;
+  font-size: clamp(1.25rem, 2.7vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.connect-movement-word-copy cite {
+  display: block;
+  margin-top: 2rem;
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+
+.connect-movement-orbit {
+  position: absolute;
+  right: -12vw;
+  bottom: -25vw;
+  width: 58vw;
+  height: 58vw;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-top-color: rgba(0, 0, 0, 0.38);
+  border-radius: 50%;
+  animation: connectOrbit 30s linear infinite;
+}
+
+.connect-movement-orbit::before,
+.connect-movement-orbit::after {
+  position: absolute;
+  content: '';
+  border: inherit;
+  border-radius: inherit;
+}
+
+.connect-movement-orbit::before {
+  inset: 12%;
+}
+
+.connect-movement-orbit::after {
+  inset: 25%;
+}
+
+.connect-movement-story {
+  position: relative;
+  display: grid;
+  min-height: 105svh;
+  grid-template-columns: minmax(4.5rem, 0.48fr) minmax(0, 3.2fr) minmax(27rem, 1.35fr);
+  gap: clamp(2rem, 3.2vw, 4.5rem);
+  overflow: hidden;
+  padding: clamp(6rem, 10vw, 10rem) clamp(1.5rem, 4vw, 4.5rem);
+  background: #050505;
+}
+
+.connect-movement-story-title {
+  align-self: start;
+  padding-top: clamp(4rem, 8vw, 8rem);
+}
+
+.connect-movement-story-title > p,
+.connect-movement-invitation > p {
+  margin: 0 0 1.5rem;
+  color: var(--connect-dim);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+
+.connect-movement-story h2,
+.connect-movement-values h2,
+.connect-movement-invitation h2 {
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: -0.065em;
+  line-height: 1;
+  word-break: keep-all;
+}
+
+.connect-movement-story h2 {
+  font-size: clamp(3.2rem, 5vw, 6.4rem);
+  font-weight: 700;
+  letter-spacing: -0.075em;
+}
+
+.connect-movement-story h2 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.connect-movement-story-copy {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  width: 100%;
+  max-width: 38rem;
+  padding-top: clamp(5rem, 10vh, 8rem);
+}
+
+.connect-movement-story-paragraph {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 1.35rem 0 1.75rem;
+  border-top: 1px solid rgba(245, 244, 239, 0.25);
+}
+
+.connect-movement-story-paragraph > span {
+  padding-top: 0.28rem;
+  color: rgba(245, 244, 239, 0.38);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.connect-movement-story-paragraph p {
+  margin: 0;
+  color: rgba(245, 244, 239, 0.82);
+  font-size: clamp(0.98rem, 0.78vw, 1.08rem);
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  line-height: 1.82;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.connect-movement-story-paragraph:last-child p {
+  color: rgba(245, 244, 239, 0.64);
+}
+
+.connect-movement-story-watermark {
+  position: absolute;
+  right: -0.05em;
+  bottom: -0.24em;
+  color: rgba(255, 255, 255, 0.035);
+  font-size: clamp(11rem, 30vw, 34rem);
+  font-weight: 800;
+  letter-spacing: -0.1em;
+  line-height: 0.8;
+  pointer-events: none;
+  animation: connectWatermarkFloat 11s ease-in-out infinite alternate;
+}
+
+.connect-movement-archive {
+  padding: clamp(6rem, 10vw, 10rem) clamp(1.5rem, 4vw, 4.5rem) clamp(8rem, 14vw, 14rem);
+  background: var(--connect-white);
+  color: #090909;
+}
+
+.connect-movement-archive-heading {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.8fr) minmax(0, 4.35fr);
+  margin-bottom: clamp(4rem, 9vw, 9rem);
+}
+
+.connect-movement-archive-heading > div:last-child > p {
+  margin: 0 0 1.5rem;
+  color: rgba(0, 0, 0, 0.44);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+
+.connect-movement-archive h2 {
+  max-width: 68rem;
+  margin: 0;
+  font-family: 'Nanum Myeongjo', Georgia, serif;
+  font-size: clamp(3.5rem, 6.8vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.075em;
+  line-height: 1.03;
+  word-break: keep-all;
+}
+
+.connect-movement-archive-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 5rem) clamp(1.25rem, 3vw, 3.5rem);
+}
+
+.connect-movement-photo-slot {
+  margin: 0;
+}
+
+.connect-movement-photo-slot-main {
+  grid-column: 1 / span 7;
+}
+
+.connect-movement-photo-slot-portrait {
+  grid-column: 9 / -1;
+  margin-top: clamp(5rem, 13vw, 13rem);
+}
+
+.connect-movement-photo-slot-wide {
+  grid-column: 3 / span 8;
+  margin-top: clamp(2rem, 5vw, 5rem);
+}
+
+.connect-movement-photo-slot > div {
+  position: relative;
+  display: flex;
+  min-height: 20rem;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.48);
+  background:
+    linear-gradient(135deg, transparent 49.85%, rgba(0, 0, 0, 0.18) 50%, transparent 50.15%),
+    linear-gradient(45deg, transparent 49.85%, rgba(0, 0, 0, 0.18) 50%, transparent 50.15%),
+    #ebeae5;
+  background-size: 205% 205%, 205% 205%, auto;
+  animation: connectPlaceholderShift 10s ease-in-out infinite alternate;
+}
+
+.connect-movement-photo-slot-main > div {
+  aspect-ratio: 4 / 3;
+}
+
+.connect-movement-photo-slot-portrait > div {
+  aspect-ratio: 3 / 4;
+}
+
+.connect-movement-photo-slot-wide > div {
+  aspect-ratio: 16 / 8;
+}
+
+.connect-movement-photo-slot > div::before,
+.connect-movement-photo-slot > div::after {
+  position: absolute;
+  content: '';
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.connect-movement-photo-slot > div::before {
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 1px;
+}
+
+.connect-movement-photo-slot > div::after {
+  top: 1rem;
+  right: 1rem;
+  width: 1px;
+  height: 2.5rem;
+}
+
+.connect-movement-photo-slot > div span {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+}
+
+.connect-movement-photo-slot > div strong {
+  font-family: 'Archivo Black', Impact, sans-serif;
+  font-size: clamp(2.1rem, 5vw, 5.2rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  animation: connectPreparingPulse 3.2s ease-in-out infinite;
+}
+
+.connect-movement-photo-slot > div small {
+  margin-top: 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+
+.connect-movement-photo-slot figcaption {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.9rem;
+  border-top: 1px solid #090909;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.connect-movement-values {
+  padding: clamp(6rem, 10vw, 10rem) clamp(1.5rem, 4vw, 4.5rem);
+  background: #0d0d0d;
+}
+
+.connect-movement-values-heading {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.8fr) minmax(0, 4.35fr);
+  margin-bottom: clamp(4rem, 8vw, 8rem);
+}
+
+.connect-movement-section-index-light {
+  color: var(--connect-dim);
+}
+
+.connect-movement-values h2 {
+  max-width: 64rem;
+  font-size: clamp(3.5rem, 6.6vw, 7rem);
+  font-weight: 700;
+}
+
+.connect-movement-value-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.connect-movement-value-list article {
+  min-height: 25rem;
+  padding: 2rem;
+}
+
+.connect-movement-value-list article + article {
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.connect-movement-value-list article > span {
+  color: var(--connect-dim);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+}
+
+.connect-movement-value-list h3 {
+  margin: 5.5rem 0 1.2rem;
+  font-size: clamp(2.8rem, 4.5vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.075em;
+}
+
+.connect-movement-value-list p {
+  max-width: 20rem;
+  margin: 0;
+  color: rgba(245, 244, 239, 0.64);
+  font-size: 1rem;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.connect-movement-flow {
+  background: var(--connect-white);
+  color: #090909;
+}
+
+.connect-movement-flow-row {
+  display: grid;
+  grid-template-columns: minmax(2rem, 0.35fr) minmax(0, 3fr) minmax(12rem, 1fr);
+  align-items: baseline;
+  gap: 2rem;
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1.5rem, 4vw, 4.5rem);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+  transition: background-color 350ms ease;
+}
+
+.connect-movement-flow-row > span {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.connect-movement-flow-row strong {
+  font-family: 'Archivo Black', Impact, sans-serif;
+  font-size: clamp(4rem, 11.6vw, 12rem);
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+  transition: transform 500ms cubic-bezier(0.2, 0.75, 0.22, 1);
+}
+
+.connect-movement-flow-row:hover {
+  background: #eceae3;
+}
+
+.connect-movement-flow-row:hover strong {
+  transform: translateX(0.035em);
+}
+
+.connect-movement-flow-row p {
+  margin: 0;
+  font-size: clamp(1rem, 1.55vw, 1.45rem);
+  letter-spacing: -0.03em;
+}
+
+.connect-movement-invitation {
+  position: relative;
+  display: flex;
+  min-height: 90svh;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(6rem, 10vw, 10rem) clamp(1.5rem, 4vw, 4.5rem);
+  background: var(--connect-white);
+  color: #090909;
+}
+
+.connect-movement-invitation::after {
+  position: absolute;
+  right: -11vw;
+  bottom: -22vw;
+  width: 52vw;
+  height: 52vw;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 50%;
+  content: '';
+  animation: connectInvitationRing 8s ease-in-out infinite alternate;
+}
+
+.connect-movement-invitation > p {
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.connect-movement-invitation h2 {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  font-size: clamp(3.1rem, 6vw, 6.3rem);
+  font-weight: 600;
+}
+
+.connect-movement-invitation h2 em {
+  font-family: 'Nanum Myeongjo', Georgia, serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.connect-movement-invitation a {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 3rem;
+  margin-top: clamp(3rem, 7vw, 6rem);
+  padding: 1.1rem 0;
+  border-bottom: 1px solid #090909;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+}
+
+.connect-movement-invitation a span {
+  font-size: 1.2rem;
+  transition: transform 250ms ease;
+}
+
+.connect-movement-invitation a:hover span {
+  transform: translate(0.2rem, -0.2rem);
+}
+
+.connect-motion-reveal {
+  opacity: 0;
+  transform: translateY(3.25rem);
+  transition:
+    opacity 900ms ease,
+    transform 1s cubic-bezier(0.2, 0.75, 0.22, 1);
+  transition-delay: 0ms;
+}
+
+.connect-motion-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.connect-motion-delay-1 {
+  transition-delay: 130ms;
+}
+
+.connect-motion-delay-2 {
+  transition-delay: 260ms;
+}
+
+@keyframes connectHeroDrift {
+  from {
+    transform: scale(1.01) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: scale(1.075) translate3d(-0.8%, -0.4%, 0);
+  }
+}
+
+@keyframes connectTitleIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.7em);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes connectMetaIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes connectOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes connectWatermarkFloat {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-2.5vw);
+  }
+}
+
+@keyframes connectPlaceholderShift {
+  from {
+    background-position: 100% 20%, 0% 80%, 0 0;
+  }
+
+  to {
+    background-position: 40% 80%, 60% 20%, 0 0;
+  }
+}
+
+@keyframes connectPreparingPulse {
+  0%,
+  100% {
+    opacity: 0.48;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes connectInvitationRing {
+  from {
+    transform: scale(0.96);
+  }
+
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@media (max-width: 1100px) {
+  .connect-movement-story {
+    min-height: auto;
+    grid-template-columns: minmax(4rem, 0.25fr) minmax(0, 1fr);
+    gap: 3rem;
+    padding-top: 7rem;
+    padding-bottom: 9rem;
+  }
+
+  .connect-movement-story-title,
+  .connect-movement-story-copy {
+    grid-column: 2;
+  }
+
+  .connect-movement-story-title {
+    padding-top: 1rem;
+  }
+
+  .connect-movement-story-copy {
+    max-width: 42rem;
+    padding-top: 0;
+  }
+
+  .connect-movement-story h2 {
+    font-size: clamp(3.2rem, 7.4vw, 5.8rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .connect-movement-hero-frame {
+    padding-bottom: 2rem;
+  }
+
+  .connect-movement-hero h1 {
+    font-size: clamp(4rem, 21vw, 7.5rem);
+    line-height: 0.78;
+  }
+
+  .connect-movement-hero h1 span:last-child {
+    margin-left: 0;
+  }
+
+  .connect-movement-hero-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .connect-movement-side-note {
+    display: none;
+  }
+
+  .connect-movement-word {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .connect-movement-word h2 {
+    font-size: clamp(4rem, 21vw, 7.2rem);
+  }
+
+  .connect-movement-story {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-top: 6rem;
+    padding-bottom: 7rem;
+  }
+
+  .connect-movement-story-title {
+    grid-column: 1;
+    padding-top: 1rem;
+  }
+
+  .connect-movement-story h2 {
+    font-size: clamp(3.1rem, 14vw, 5.4rem);
+  }
+
+  .connect-movement-story h2 span {
+    white-space: normal;
+  }
+
+  .connect-movement-story-copy {
+    grid-column: 1;
+    max-width: 35rem;
+    padding-top: 0;
+  }
+
+  .connect-movement-story-paragraph {
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.85rem;
+    padding: 1.15rem 0 1.45rem;
+  }
+
+  .connect-movement-story-paragraph p {
+    font-size: 0.98rem;
+    line-height: 1.78;
+  }
+
+  .connect-movement-values-heading,
+  .connect-movement-archive-heading {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .connect-movement-archive h2 {
+    font-size: clamp(3.1rem, 13.5vw, 5.2rem);
+  }
+
+  .connect-movement-archive-grid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .connect-movement-photo-slot-main,
+  .connect-movement-photo-slot-portrait,
+  .connect-movement-photo-slot-wide {
+    grid-column: 1;
+    margin-top: 0;
+  }
+
+  .connect-movement-photo-slot-portrait {
+    width: 76%;
+    margin-left: auto;
+  }
+
+  .connect-movement-photo-slot > div strong {
+    font-size: clamp(2.2rem, 12vw, 4.5rem);
+  }
+
+  .connect-movement-values h2 {
+    font-size: clamp(3.2rem, 14vw, 5.5rem);
+  }
+
+  .connect-movement-value-list {
+    grid-template-columns: 1fr;
+  }
+
+  .connect-movement-value-list article {
+    min-height: 18rem;
+    padding: 1.5rem 0;
+  }
+
+  .connect-movement-value-list article + article {
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    border-left: 0;
+  }
+
+  .connect-movement-value-list h3 {
+    margin-top: 4rem;
+  }
+
+  .connect-movement-flow-row {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .connect-movement-flow-row strong {
+    font-size: clamp(3.5rem, 17vw, 6.5rem);
+  }
+
+  .connect-movement-flow-row p {
+    grid-column: 2;
+  }
+
+  .connect-movement-invitation {
+    min-height: 80svh;
+  }
+
+  .connect-movement-invitation h2 {
+    font-size: clamp(3rem, 13.5vw, 5.2rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connect-movement-page *,
+  .connect-movement-page *::before,
+  .connect-movement-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .connect-motion-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
