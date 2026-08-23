@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Navigate, Routes, Route } from 'react-router-dom'
 
 // Lazy load pages
 const HomePage = lazy(() => import('./pages/HomePage'))
@@ -9,7 +9,6 @@ const AuriCampDetailPage = lazy(() => import('./pages/AuriCampDetailPage'))
 const AndCampDetailPage = lazy(() => import('./pages/AndCampDetailPage'))
 const Camp31DetailPage = lazy(() => import('./pages/Camp31DetailPage'))
 const HanadaCampDetailPage = lazy(() => import('./pages/HanadaCampDetailPage'))
-const ConnectWorshipPage = lazy(() => import('./pages/ConnectWorshipPage'))
 const ConnectWorshipMovementPage = lazy(() => import('./pages/ConnectWorshipMovementPage'))
 const DonationPage = lazy(() => import('./pages/DonationPage'))
 
@@ -33,8 +32,8 @@ function App() {
         <Route path="/camp/and" element={<AndCampDetailPage />} />
         <Route path="/camp/31" element={<Camp31DetailPage />} />
         <Route path="/camp/hanada" element={<HanadaCampDetailPage />} />
-        <Route path="/connect-worship" element={<ConnectWorshipPage />} />
-        <Route path="/connect-worship-movement" element={<ConnectWorshipMovementPage />} />
+        <Route path="/connect-worship" element={<ConnectWorshipMovementPage />} />
+        <Route path="/connect-worship-movement" element={<Navigate to="/connect-worship" replace />} />
         <Route path="/donation" element={<DonationPage />} />
       </Routes>
     </Suspense>
