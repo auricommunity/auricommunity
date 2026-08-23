@@ -130,7 +130,7 @@ export default function ConnectWorshipMovementPage() {
             </div>
             <div>
               <p>SCENES OF PRAISE</p>
-              <h2 id="connect-archive-title">함께 만들어 갈<br />우리의 다음 장면</h2>
+              <h2 id="connect-archive-title">함께 움직이며<br />하나 되어 드리는 찬양</h2>
             </div>
           </div>
 
@@ -161,34 +161,6 @@ export default function ConnectWorshipMovementPage() {
               </div>
               <figcaption>하나의 마음으로 함께 드리는 예배</figcaption>
             </figure>
-          </div>
-        </section>
-
-        <section className="connect-movement-values" aria-labelledby="connect-values-title">
-          <div className="connect-movement-values-heading connect-motion-reveal">
-            <div className="connect-movement-section-index connect-movement-section-index-light">
-              <span>04</span>
-              <span>HOW WE WORSHIP</span>
-            </div>
-            <h2 id="connect-values-title">잘 추는 것보다<br />함께 드리는 마음</h2>
-          </div>
-
-          <div className="connect-movement-value-list">
-            <article className="connect-motion-reveal">
-              <span>01 / EVERYONE</span>
-              <h3>누구나</h3>
-              <p>경험과 실력에 관계없이 편안하게 참여합니다.</p>
-            </article>
-            <article className="connect-motion-reveal connect-motion-delay-1">
-              <span>02 / TOGETHER</span>
-              <h3>함께</h3>
-              <p>서로의 움직임을 따라가며 하나의 공동체가 됩니다.</p>
-            </article>
-            <article className="connect-motion-reveal connect-motion-delay-2">
-              <span>03 / WORSHIP</span>
-              <h3>예배</h3>
-              <p>보여주기 위한 춤이 아니라 하나님께 드리는 찬양입니다.</p>
-            </article>
           </div>
         </section>
 

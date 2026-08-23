@@ -245,7 +245,6 @@
 }
 
 .connect-movement-story h2,
-.connect-movement-values h2,
 .connect-movement-invitation h2 {
   margin: 0;
   font-weight: 650;
@@ -454,65 +453,6 @@
   border-top: 1px solid #090909;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
-}
-
-.connect-movement-values {
-  padding: clamp(6rem, 10vw, 10rem) clamp(1.5rem, 4vw, 4.5rem);
-  background: #0d0d0d;
-}
-
-.connect-movement-values-heading {
-  display: grid;
-  grid-template-columns: minmax(5rem, 0.8fr) minmax(0, 4.35fr);
-  margin-bottom: clamp(4rem, 8vw, 8rem);
-}
-
-.connect-movement-section-index-light {
-  color: var(--connect-dim);
-}
-
-.connect-movement-values h2 {
-  max-width: 64rem;
-  font-size: clamp(3.5rem, 6.6vw, 7rem);
-  font-weight: 700;
-}
-
-.connect-movement-value-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.connect-movement-value-list article {
-  min-height: 25rem;
-  padding: 2rem;
-}
-
-.connect-movement-value-list article + article {
-  border-left: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.connect-movement-value-list article > span {
-  color: var(--connect-dim);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-}
-
-.connect-movement-value-list h3 {
-  margin: 5.5rem 0 1.2rem;
-  font-size: clamp(2.8rem, 4.5vw, 4.8rem);
-  font-weight: 700;
-  letter-spacing: -0.075em;
-}
-
-.connect-movement-value-list p {
-  max-width: 20rem;
-  margin: 0;
-  color: rgba(245, 244, 239, 0.64);
-  font-size: 1rem;
-  line-height: 1.7;
-  word-break: keep-all;
 }
 
 .connect-movement-flow {
@@ -827,7 +767,6 @@
     line-height: 1.78;
   }
 
-  .connect-movement-values-heading,
   .connect-movement-archive-heading {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -856,28 +795,6 @@
 
   .connect-movement-photo-slot > div strong {
     font-size: clamp(2.2rem, 12vw, 4.5rem);
-  }
-
-  .connect-movement-values h2 {
-    font-size: clamp(3.2rem, 14vw, 5.5rem);
-  }
-
-  .connect-movement-value-list {
-    grid-template-columns: 1fr;
-  }
-
-  .connect-movement-value-list article {
-    min-height: 18rem;
-    padding: 1.5rem 0;
-  }
-
-  .connect-movement-value-list article + article {
-    border-top: 1px solid rgba(255, 255, 255, 0.22);
-    border-left: 0;
-  }
-
-  .connect-movement-value-list h3 {
-    margin-top: 4rem;
   }
 
   .connect-movement-flow-row {
